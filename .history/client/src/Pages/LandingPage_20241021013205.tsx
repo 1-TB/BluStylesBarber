@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Facebook, Menu, X, Search } from 'lucide-react';
 
 // Import images
-import logoTransparent from '../assets/images/blustyles_logo_transparent.png';
+import logo from '../assets/images/blustyles_logo.jpg';
+import logoTransparent from '../assblustyles_logo-transparent.png'
 import cut01 from '../assets/images/bluestlyes_cut_01.jpg';
 import cut02 from '../assets/images/blustyles_cut_02.jpg';
 import cutType01 from '../assets/images/blustyles_cuttype_01.jpg';
@@ -20,8 +21,8 @@ const LandingPage = () => {
       <div className="min-h-screen">
         {/* Header */}
         <header className="p-4 flex justify-between items-center">
-          <div className="w-16 h-16 flex items-center justify-center overflow-hidden rounded-full">
-            <img src={logoTransparent} alt="Blu Styles Logo" className="w-full h-full object-cover" />
+          <div className="w-16 h-16 bg-black flex items-center justify-center overflow-hidden rounded-full">
+            <img src={logo} alt="Blu Styles Logo" className="w-full h-full object-cover" />
           </div>
           <div className="flex space-x-4">
             <button className="p-2">

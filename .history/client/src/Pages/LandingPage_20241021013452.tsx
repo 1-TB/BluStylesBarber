@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Facebook, Menu, X, Search } from 'lucide-react';
 
 // Import images
+import logo from '../assets/images/blustyles_logo.jpg';
 import logoTransparent from '../assets/images/blustyles_logo_transparent.png';
 import cut01 from '../assets/images/bluestlyes_cut_01.jpg';
 import cut02 from '../assets/images/blustyles_cut_02.jpg';
