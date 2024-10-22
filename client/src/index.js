@@ -3,13 +3,15 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import LandingPage from './Pages/LandingPage.tsx';
+import LandingPage from './Pages/LandingPage.jsx';
+import Footer from './Components/Footer.jsx';
+import NavBar from './Components/NavBar.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <LandingPage />
-    <App />
+     <Footer />
   </React.StrictMode>
 );
 
