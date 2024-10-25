@@ -9,11 +9,13 @@ import NavBar from './Components/NavBar.jsx';
 import OurStaff from './Pages/OurStaff.jsx';
 import PriceList from './Pages/PriceList.jsx';
 import FeaturedCuts from './Pages/FeaturedCuts.jsx';
+import IntroductionSection from './Components/IntroductionSection.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <LandingPage />
+    <IntroductionSection />
     <OurStaff />
     <PriceList />
     <FeaturedCuts />
