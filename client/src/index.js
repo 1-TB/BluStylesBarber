@@ -7,6 +7,8 @@ import LandingPage from './Pages/LandingPage.jsx';
 import Footer from './Components/Footer.jsx';
 import NavBar from './Components/NavBar.jsx';
 import OurStaff from './Pages/OurStaff.jsx';
+import PriceList from './Pages/PriceList.jsx';
+import FeaturedCuts from './Pages/FeaturedCuts.jsx';
 import IntroductionSection from './Components/IntroductionSection.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -15,7 +17,9 @@ root.render(
     <LandingPage />
     <IntroductionSection />
     <OurStaff />
-     <Footer />
+    <PriceList />
+    <FeaturedCuts />
+    <Footer />
   </React.StrictMode>
 );
 
