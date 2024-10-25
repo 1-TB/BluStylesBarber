@@ -3,7 +3,7 @@ import { Search } from 'lucide-react';
 import NavBar from '../Components/NavBar';
 import Footer from '../Components/Footer';
 import logoTransparent from '../assets/images/blustyles_logo_transparent.png';
-import cutBackground from '../assets/images/bluestlyes_cut_01.jpg';
+import cutBackground from '../assets/images/blustyles_cut_01.jpg';
 
 
 const LandingPage = () => {

@@ -6,11 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import LandingPage from './Pages/LandingPage.jsx';
 import Footer from './Components/Footer.jsx';
 import NavBar from './Components/NavBar.jsx';
+import OurStaff from './Pages/OurStaff.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <LandingPage />
+    <OurStaff />
      <Footer />
   </React.StrictMode>
 );
