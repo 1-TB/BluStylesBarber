@@ -7,11 +7,13 @@ import LandingPage from './Pages/LandingPage.jsx';
 import Footer from './Components/Footer.jsx';
 import NavBar from './Components/NavBar.jsx';
 import OurStaff from './Pages/OurStaff.jsx';
+import IntroductionSection from './Components/IntroductionSection.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <LandingPage />
+    <IntroductionSection />
     <OurStaff />
      <Footer />
   </React.StrictMode>
