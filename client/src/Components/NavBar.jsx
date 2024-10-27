@@ -32,10 +32,8 @@ const NavBar = () => {
           <ul className="space-y-4">
             {[
               'HOME',
-              'FEATURES',
-              'BLOG',
+              'OUR CUTS',
               'ABOUT',
-              'SHOP',
               'CONTACT US'
             ].map((item) => (
               <li key={item}>

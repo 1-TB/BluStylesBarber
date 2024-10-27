@@ -3,7 +3,7 @@ import { Phone, Clock, MapPin } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-black text-white p-8 mt-16">
+    <footer className="bg-black text-white p-8">
       <div className="max-w-6xl mx-auto">
         {/* Main Footer Content */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-8 md:space-y-0">
@@ -47,7 +47,7 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="mt-8 pt-4 border-t border-gray-800 text-center text-gray-400 text-sm">
-          <p>© {new Date().getFullYear()} Your Business Name. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Your BluStyles. All rights reserved.</p>
         </div>
       </div>
     </footer>
