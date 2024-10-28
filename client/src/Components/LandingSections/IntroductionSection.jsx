@@ -1,5 +1,5 @@
 import React from 'react'
-import IntroPhoto from '../assets/images/blustyles_cut_02.jpg'
+import IntroPhoto from '../../assets/images/blustyles_cut_02.jpg'
 
 export default function IntroductionSection() {
   return (

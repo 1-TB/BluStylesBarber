@@ -1,9 +1,9 @@
 import React from 'react';
 import { ZapIcon } from 'lucide-react';
-import StaffCard from '../Components/StaffCard';
-import staffOneImage from '../assets/images/blustyles_cut_01.jpg';
-import staffTwoImage from '../assets/images/blustyles_cut_02.jpg';
-import staffThreeImage from '../assets/images/blustyles_cuttype_02.jpg';
+import StaffCard from '../Cards/StaffCard';
+import staffOneImage from '../../assets/images/blustyles_cut_01.jpg';
+import staffTwoImage from '../../assets/images/blustyles_cut_02.jpg';
+import staffThreeImage from '../../assets/images/blustyles_cuttype_02.jpg';
 
   {/* Staff data array - note: future config through json? */}
   const staffMembers = [

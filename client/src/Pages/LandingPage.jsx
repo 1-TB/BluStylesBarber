@@ -1,29 +1,14 @@
 import React from 'react';
-import { Search } from 'lucide-react';
-import NavBar from '../Components/NavBar';
-import Footer from '../Components/Footer';
-import logoTransparent from '../assets/images/blustyles_logo_transparent.png';
 import cutBackground from '../assets/images/blustyles_cut_01.jpg';
+import IntroductionSection from "../Components/LandingSections/IntroductionSection";
+import OurStaff from "../Components/LandingSections/OurStaff";
+import PriceList from "../Components/LandingSections/PriceList";
+import FeaturedCuts from "../Components/LandingSections/FeaturedCuts";
+import { Link } from 'react-router-dom';
 
 const LandingPage = () => {
   return (
-      <div className="relative min-h-screen bg-black text-white">
-        {/* Header with Logo and Icons */}
-        <header className="absolute top-0 left-0 right-0 z-50 p-4">
-          <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="w-20 h-20 md:w-24 md:h-24">
-              <img
-                  src={logoTransparent}
-                  alt="Blu Styles Logo"
-                  className="w-full h-full object-contain"
-              />
-            </div>
-            <div className="flex items-center">
-              <NavBar />
-            </div>
-          </div>
-        </header>
-
+      <>
         {/* Main Hero Section */}
         <main className="relative min-h-screen">
           {/* Background Image */}
@@ -60,9 +45,11 @@ const LandingPage = () => {
                   "WE WANT YOU TO LEAVE BETTER THAN YOU CAME!"
                 </p>
 
-                <button className="bg-gray-700 hover:bg-gray-600 text-white px-8 py-4 rounded transition-colors duration-200">
-                  CALL US TODAY
-                </button>
+                <Link to="/booking">
+                  <button className="bg-gray-700 hover:bg-gray-600 text-white px-8 py-4 rounded transition-colors duration-200">
+                    BOOK NOW!
+                  </button>
+                </Link>
               </div>
             </div>
 
@@ -104,7 +91,11 @@ const LandingPage = () => {
             </div>
           </div>
         </main>
-      </div>
+        <IntroductionSection />
+        <OurStaff />
+        <PriceList />
+        <FeaturedCuts />
+      </>
   );
 };
 

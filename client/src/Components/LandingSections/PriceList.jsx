@@ -1,7 +1,7 @@
 import React from 'react';
 import { ZapIcon } from 'lucide-react';
-import HoverButton from '../Components/HoverButton';
-import leftSideImage from '../assets/images/blustyles_cuttype_02.jpg';
+import HoverButton from '../MSC/HoverButton';
+import leftSideImage from '../../assets/images/blustyles_cuttype_02.jpg';
 
 const services = [
   { name: "Haircut", price: 40, time: 30 },

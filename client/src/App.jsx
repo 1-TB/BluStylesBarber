@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import React, { useEffect, useState } from "react";
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LandingPage from './Pages/LandingPage';
+import OurCuts from './Pages/OurCuts';
+import About from './Pages/About';
+import Contact from './Pages/Contact';
+import Layout from './Components/MSC/Layout';
+import BookingPage from "./Pages/Booking";
+import BookingConfirmation from "./Pages/Booking/Conformation";
 
-function App() {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    fetch("/api")
-      .then(res => res.json())
-      .then(data => setData(data.message))
-      .catch(error => console.error("Unable to fetch data,", error))
-  }, [])
-
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>{!data ? "Loading..." : data}</p>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    return (
+        <Router>
+            <Routes>
+                <Route element={<Layout />}>
+                    <Route index element={<LandingPage />} />
+                    <Route path="/our-cuts" element={<OurCuts />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/booking" element={<BookingPage />} />
+                    <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+                </Route>
+            </Routes>
+        </Router>
+    );
+};
 
 export default App;

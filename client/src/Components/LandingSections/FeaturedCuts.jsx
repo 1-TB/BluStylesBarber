@@ -1,8 +1,8 @@
 import { ZapIcon } from 'lucide-react';
-import FeaturedCutCard from '../Components/FeaturedCutCard';
-import ScrollChevron from '../Components/ScrollChevron';
+import FeaturedCutCard from '../Cards/FeaturedCutCard';
+import ScrollChevron from '../MSC/ScrollChevron';
 import { useRef, useState, useEffect } from 'react'
-import tempCutImg from '../assets/images/blustyles_cuttype_01.jpg'
+import tempCutImg from '../../assets/images/blustyles_cuttype_01.jpg'
 
 const FeaturedCuts = () => {
   const scrollContainerRef = useRef(null);
