@@ -1,14 +1,23 @@
 const express = require("express");
 const path = require('path');
 const nodemailer = require('nodemailer');
+const cors = require('cors')
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
+// Enable to use the fetch API
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
 // Middleware
 app.use(express.static(path.resolve(__dirname, '../client/build')));
 app.use(express.json());
+//Enable cors to access Google API from client domain 
+app.use(cors({
+  origin: 'http://localhost:3000'
+}))
+
 
 // Configure nodemailer
 const transporter = nodemailer.createTransport({
@@ -29,6 +38,31 @@ const validatePhone = (phone) => {
   const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
   return phoneRegex.test(phone);
 };
+
+// GET Method to fetch reviews from Google API
+app.get('/api/reviews', async (req, res) => {
+  //Store ID from google api
+  const bluStylesId = 'ChIJ9w5qKPNiz4cREmgPmv50ct0';
+   // Store API key in .env file for security 
+  const apiKey = process.env.GOOGLE_API_KEY;
+
+  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${bluStylesId}&fields=name,rating,user_ratings_total&key=${apiKey}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if (data) {
+      res.json(data)
+    } else {
+      res.status(404).json({ message: 'No reviews found for this place.' });
+    }
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    res.status(500).json({ message: 'Failed to fetch reviews.' });
+  }
+});
+
 
 // Contact form endpoint
 app.post("/api/contact", async (req, res) => {

@@ -4,7 +4,7 @@ import ScrollChevron from '../MSC/ScrollChevron';
 import { useRef, useState, useEffect } from 'react'
 import tempCutImg from '../../assets/images/blustyles_cuttype_01.jpg'
 
-const FeaturedCuts = () => {
+const FeaturedCuts = ({refProp}) => {
   const scrollContainerRef = useRef(null);
   const [scrollPercentage, setScrollPercentage] = useState(0);
 
@@ -79,7 +79,7 @@ const FeaturedCuts = () => {
 
   return (
     <div className="w-full min-h-screen bg-slate-800 p-8 md:p-16 content-center">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto"  ref={refProp}>
         {/* Header */}
         <div className="mb-12 text-center">
           <h2 className="text-4xl font-bold text-slate-300 mb-4">

@@ -11,7 +11,7 @@ const services = [
   { name: "Beard Trim", price: 15, time: 20 },
 ];
 
-const PriceList = () => {
+const PriceList = ({refProp}) => {
   return (
     <div className="min-h-screen bg-slate-800 flex">
       {/* Left side image */}
@@ -24,7 +24,7 @@ const PriceList = () => {
       </div>
 
       {/* Right side prices */}
-      <div className="w-full md:w-1/2 bg-slate-300/90 p-8 md:p-16 flex flex-col justify-center">
+      <div className="w-full md:w-1/2 bg-slate-300/90 p-8 md:p-16 flex flex-col justify-center" ref={refProp}>
         <div className="max-w-lg mx-auto w-full">
           {/* Header */}
           <div className="mb-12">
