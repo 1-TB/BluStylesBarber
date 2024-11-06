@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './Pages/LandingPage';
@@ -23,6 +24,21 @@ const App = () => {
             </Routes>
         </Router>
     );
+};
+
+export default App;
+*/
+
+// FOR TESTING THE CMS!!!!
+import React from 'react';
+import CMSHome from './Pages/CMS/CMSHome';
+
+const App = () => {
+  return (
+    <div>
+      <CMSHome />
+    </div>
+  );
 };
 
 export default App;
