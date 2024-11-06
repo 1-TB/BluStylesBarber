@@ -6,7 +6,7 @@ const services = [
     id: 1,
     title: "Haircut Styles",
     description: "Get a fresh look with our wide range of haircut styles, customized to match your unique personality and preferences. From classic cuts to the latest trends, we ensure you leave looking sharp and confident.",
-    image: Scissors 
+    image: Scissors
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ const services = [
 ];
 
 
-export default function ServiceSection({pricingRef}) {
+export default function ServiceSection({ pricingRef }) {
   return (
     <div className='w-full min-h-screen bg-[#9DAED0]  pb-8 lg:pb-0 lg:flex lg:items-center'>
       <div className='w-full flex flex-col justify-center items-center space-y-4 p-2'>
@@ -48,13 +48,13 @@ export default function ServiceSection({pricingRef}) {
               <h4 className="text-2xl font-bold text-white uppercase font-teko">{service.title}</h4>
               <p className="text-gray-400 mt-2 mb-4 font-abel">{service.description}</p>
               <button
-              onClick={() => {
-                if(pricingRef != null){
-                  pricingRef.current.scrollIntoView({
-                    behavior: 'smooth',
-                  })
-                }
-              }}
+                onClick={() => {
+                  if (pricingRef != null) {
+                    pricingRef.current.scrollIntoView({
+                      behavior: 'smooth',
+                    })
+                  }
+                }}
               >
                 View Pricing &rarr;
               </button>
