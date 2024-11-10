@@ -4,6 +4,7 @@ import Rating from '@mui/material/Rating';
 import FacebookIcon from '../../assets/images/Facebook_Logo_Primary.png'
 import GoogleRatingCard from '../Cards/GoogleRatingCard';
 import ReviewCarousel from '../Cards/ReviewCarousel';
+import  motion  from "framer-motion";
 
 const iconsData = [
   {
@@ -36,7 +37,7 @@ export default function ReviewSection() {
       <h3 className='font-bold text-4xl uppercase font-teko text-[#163163] '>
         Why Choose Us
       </h3>
-      <ZapIcon className="w-8 h-8 mb-3 text-blue-400 mx-auto animate-pulse" />
+      <ZapIcon className="w-8 h-8 mb-3 text-blue-950 mx-auto animate-pulse" />
 
       <div className='grid grid-cols-1 md:grid-cols-3 max-w-7xl gap-4 mb-11 '>
         {iconsData.map((icon) => (

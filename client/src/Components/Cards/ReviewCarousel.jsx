@@ -82,7 +82,7 @@ export default function ReviewCarousel() {
         setCurrentReviewIndex((prevIndex) =>
           (prevIndex + 1) % reviews.length
         );
-      }, 7000); // Change review every 7 seconds
+      }, 10000); // Change review every 10 seconds
 
       return () => clearInterval(interval);
     }

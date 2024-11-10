@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import cutBackground from '../assets/images/blustyles_cut_01.jpg';
 import IntroductionSection from "../Components/LandingSections/IntroductionSection";
 import OurStaff from "../Components/LandingSections/OurStaff";
@@ -9,6 +9,11 @@ import ServiceSection from '../Components/LandingSections/ServiceSection';
 import ReviewSection from '../Components/LandingSections/ReviewSection';
 
 const LandingPage = () => {
+
+  // Used for smooth scrolling when user clicks on the ServiceSection/IntroductionSection
+  const pricingRef = useRef(null)
+  const cutsRef = useRef(null)
+
   return (
       <>
         {/* Main Hero Section */}
@@ -93,11 +98,11 @@ const LandingPage = () => {
             </div>
           </div>
         </main>
-        <IntroductionSection />
-        <ServiceSection />
+        <IntroductionSection cutsRef={cutsRef}/>
+        <ServiceSection pricingRef={pricingRef}/>
         <OurStaff />
-        <PriceList />
-        <FeaturedCuts />
+        <PriceList priceRef={pricingRef}/>
+        <FeaturedCuts cutsRef={cutsRef}/>
         <ReviewSection />
       </>
   );
