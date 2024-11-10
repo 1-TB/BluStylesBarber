@@ -5,6 +5,8 @@ import OurStaff from "../Components/LandingSections/OurStaff";
 import PriceList from "../Components/LandingSections/PriceList";
 import FeaturedCuts from "../Components/LandingSections/FeaturedCuts";
 import { Link } from 'react-router-dom';
+import ServiceSection from '../Components/LandingSections/ServiceSection';
+import ReviewSection from '../Components/LandingSections/ReviewSection';
 
 const LandingPage = () => {
   return (
@@ -92,9 +94,11 @@ const LandingPage = () => {
           </div>
         </main>
         <IntroductionSection />
+        <ServiceSection />
         <OurStaff />
         <PriceList />
         <FeaturedCuts />
+        <ReviewSection />
       </>
   );
 };
