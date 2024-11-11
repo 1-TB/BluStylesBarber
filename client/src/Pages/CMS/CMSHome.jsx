@@ -7,8 +7,10 @@ import LoadingOverlay from './Components/LoadingOverlay';
 import EditClientModal from './Modals/EditClientModal';
 import ClientInfoModal from './Modals/ClientInfoModal';
 import AddClientModal from './Modals/AddClientModal';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from './Components/ui/button';
+import { Alert, AlertDescription } from './Components/ui/alert';
+
+
 
 const CMSHome = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -19,6 +21,8 @@ const CMSHome = () => {
     const [selectedClient, setSelectedClient] = useState(null);
     const [error, setError] = useState(null);
     const [clients, setClients] = useState([]);
+    const [visitHistory, setVisitHistory] = useState([]);
+    const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
     const { user, logout } = useAuth();
     const navigate = useNavigate();
@@ -173,6 +177,30 @@ const CMSHome = () => {
         } catch (err) {
             setError('Failed to update client');
             console.error('Error updating client:', err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleVisitHistory = async (client) => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`/api/clients/${client._id}/history`, {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to fetch visit history');
+            }
+    
+            const history = await response.json();
+            setVisitHistory(history);
+            setIsHistoryModalOpen(true);
+        } catch (err) {
+            setError('Failed to fetch visit history');
+            console.error('Error fetching visit history:', err);
         } finally {
             setIsLoading(false);
         }

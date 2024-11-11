@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { useAuth } from "./AuthContext";
+import { Button } from './Components/ui/button';
+import { Alert, AlertDescription } from "./Components/ui/alert";
+import { 
+    Card, 
+    CardHeader, 
+    CardTitle, 
+    CardContent, 
+    CardFooter 
+  } from "./Components/ui/card";
+  import { Input } from "./Components/ui/input";
 
-const AuthPage = () => {
+export const AuthPage = () => {
   const [mode, setMode] = useState('login'); // login, register, forgot
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

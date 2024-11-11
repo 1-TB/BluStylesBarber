@@ -8,10 +8,10 @@ import Contact from './Pages/Contact';
 import Layout from './Components/MSC/Layout';
 import BookingPage from "./Pages/Booking";
 import BookingConfirmation from "./Pages/Booking/Conformation";
+import { AuthProvider } from "./Pages/CMS/AuthContext";
+import { AuthPage } from './Pages/CMS/AuthPage';
 import CMSHome from './Pages/CMS/CMSHome';
-import ProtectedRoute from './Pages/CMS/ProtectedRoute';
-import AuthProvider from './Pages/CMS/AuthContext';
-import AuthPage from './Pages/CMS/AuthPage';
+import { ProtectedRoute } from './Pages/CMS/ProtectedRoute';
 
 
 const App = () => {

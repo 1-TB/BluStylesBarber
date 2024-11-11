@@ -1,8 +1,8 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from "./AuthContext";
 
-const ProtectedRoute = ({ children, requireAdmin = false }) => {
+export const ProtectedRoute = ({ children, requireAdmin = false }) => {
   const { user } = useAuth();
 
   if (!user) {
@@ -15,5 +15,3 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
 
   return children;
 };
-
-export default ProtectedRoute;
