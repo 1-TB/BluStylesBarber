@@ -11,9 +11,9 @@ const services = [
   { name: "Beard Trim", price: 15, time: 20 },
 ];
 
-const PriceList = () => {
+const PriceList = ( { priceRef } ) => {
   return (
-    <div className="min-h-screen bg-slate-800 flex">
+    <div className="min-h-screen bg-slate-800 flex" ref={priceRef}>
       {/* Left side image */}
       <div className="hidden md:block w-1/2 contrast-125 ">
         <img
@@ -37,7 +37,7 @@ const PriceList = () => {
           </div>
 
           {/* Price List */}
-          <div className="space-y-6 mb-12">
+          <div className="space-y-6 mb-12" >
             {services.map((service) => (
                 <div
                 key={service.name}
