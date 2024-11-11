@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
-import FormattedPhoneInput from '../Components/FormattedPhoneInput';
-import FormattedDateInput from '../Components/FormattedDateInput';
-import FormField from '../Components/FormField';
 
-// Modal for adding a new client
+import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../Components/ui/dialog";
+import { Button } from "../Components/ui/button";
+import { Input } from "../Components/ui/input";
+import { Alert, AlertDescription } from "../Components/ui/alert";
+
 const AddClientModal = ({ isOpen, onClose, onAdd }) => {
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
         email: '',
         lastVisit: '',
-        nextVisit: '',
-        notes: ''
+        nextVisit: ''
     });
+    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -24,105 +25,147 @@ const AddClientModal = ({ isOpen, onClose, onAdd }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setError('');
+
+        // Basic validation
+        if (!formData.name || !formData.phone || !formData.email) {
+            setError('Please fill in all required fields');
+            return;
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            setError('Please enter a valid email address');
+            return;
+        }
+
+        // Phone validation
+        const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+        if (!phoneRegex.test(formData.phone)) {
+            setError('Please enter a valid phone number');
+            return;
+        }
+
         onAdd(formData);
+        handleClose();
+    };
+
+    const handleClose = () => {
         setFormData({
             name: '',
             phone: '',
             email: '',
             lastVisit: '',
-            nextVisit: '',
-            notes: ''
+            nextVisit: ''
         });
+        setError('');
+        onClose();
     };
 
-    if (!isOpen) return null;
-
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-gray-100 rounded-lg w-full max-w-md p-6 relative">
-                <h2 className="text-xl font-bold text-indigo-900 mb-6">
-                    ADD NEW CLIENT
-                </h2>
+        <Dialog open={isOpen} onOpenChange={handleClose}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-bold text-gray-900">Add New Client</DialogTitle>
+                </DialogHeader>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="space-y-4">
-                        <FormField label="Name" required>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                className="flex-1 p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                                required
-                            />
-                        </FormField>
+                {error && (
+                    <Alert variant="destructive" className="mb-4">
+                        <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                )}
 
-                        <FormField label="Phone" required>
-                            <FormattedPhoneInput
-                                value={formData.phone}
-                                onChange={handleChange}
-                                required
-                            />
-                        </FormField>
-
-                        <FormField label="Email">
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className="flex-1 p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                            />
-                        </FormField>
-
-                        <FormField label="Last Visit">
-                            <FormattedDateInput
-                                name="lastVisit"
-                                value={formData.lastVisit}
-                                onChange={handleChange}
-                            />
-                        </FormField>
-
-                        <FormField label="Next Visit">
-                            <FormattedDateInput
-                                name="nextVisit"
-                                value={formData.nextVisit}
-                                onChange={handleChange}
-                            />
-                        </FormField>
-
-                        <div className="flex items-start">
-                            <label className="w-32 text-indigo-900 font-medium mt-2">
-                                Notes:
-                            </label>
-                            <textarea
-                                name="notes"
-                                value={formData.notes}
-                                onChange={handleChange}
-                                className="flex-1 p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                                rows="4"
-                            />
-                        </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                            Name <span className="text-red-500">*</span>
+                        </label>
+                        <Input
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            className="text-gray-900"
+                            placeholder="John Doe"
+                        />
                     </div>
 
-                    <div className="flex justify-start space-x-4 mt-6">
-                        <button
-                            type="submit"
-                            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                            Add Client
-                        </button>
-                        <button
+                    <div className="space-y-2">
+                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                            Phone <span className="text-red-500">*</span>
+                        </label>
+                        <Input
+                            id="phone"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            className="text-gray-900"
+                            placeholder="(123) 456-7890"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                            Email <span className="text-red-500">*</span>
+                        </label>
+                        <Input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="text-gray-900"
+                            placeholder="john@example.com"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label htmlFor="lastVisit" className="block text-sm font-medium text-gray-700">
+                            Last Visit
+                        </label>
+                        <Input
+                            id="lastVisit"
+                            name="lastVisit"
+                            type="date"
+                            value={formData.lastVisit}
+                            onChange={handleChange}
+                            className="text-gray-900"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label htmlFor="nextVisit" className="block text-sm font-medium text-gray-700">
+                            Next Visit
+                        </label>
+                        <Input
+                            id="nextVisit"
+                            name="nextVisit"
+                            type="date"
+                            value={formData.nextVisit}
+                            onChange={handleChange}
+                            className="text-gray-900"
+                        />
+                    </div>
+
+                    <div className="flex justify-end space-x-3 pt-4">
+                        <Button
                             type="button"
-                            onClick={onClose}
-                            className="bg-red-800 text-white px-6 py-2 rounded-lg hover:bg-red-900 transition-colors"
+                            variant="outline"
+                            onClick={handleClose}
                         >
                             Cancel
-                        </button>
+                        </Button>
+                        <Button
+                            type="submit"
+                            className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                        >
+                            Add Client
+                        </Button>
                     </div>
                 </form>
-            </div>
-        </div>
+            </DialogContent>
+        </Dialog>
     );
 };
 
