@@ -16,6 +16,7 @@ const CMSHome = () => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState(null);
     const [error, setError] = useState(null);
+    
     // Temp hardcoded client info
     const [clients, setClients] = useState([{
         name: 'John Doe',
