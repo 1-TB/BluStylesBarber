@@ -9,9 +9,14 @@ import Layout from './Components/MSC/Layout';
 import BookingPage from "./Pages/Booking";
 import BookingConfirmation from "./Pages/Booking/Conformation";
 import CMSHome from './Pages/CMS/CMSHome';
+import ProtectedRoute from './Pages/CMS/ProtectedRoute';
+import AuthProvider from './Pages/CMS/AuthContext';
+import AuthPage from './Pages/CMS/AuthPage';
+
 
 const App = () => {
     return (
+      <AuthProvider>
         <Router>
             <Routes>
                 <Route element={<Layout />}>
@@ -21,10 +26,19 @@ const App = () => {
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/booking" element={<BookingPage />} />
                     <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-                    <Route path="/cms" element={<CMSHome />} />
+                    <Route path="/login" element={<AuthPage />} />
+                    <Route
+                        path="/cms"
+                        element={
+                          <ProtectedRoute requireAdmin>
+                            <CMSHome />
+                          </ProtectedRoute>
+                        }
+                      />
                 </Route>
             </Routes>
         </Router>
+      </AuthProvider>
     );
 };
 
