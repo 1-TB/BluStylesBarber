@@ -10,7 +10,7 @@ import AddClientModal from './Modals/AddClientModal';
 import { Button } from './Components/ui/button';
 import { Alert, AlertDescription } from './Components/ui/alert';
 import ChangePasswordModal from "./Modals/PasswordChangeModel";
-
+import darkLogo from "../../assets/images/blustyles_logo_dark.png"
 
 
 
@@ -225,7 +225,7 @@ const CMSHome = () => {
                 <div className="flex justify-between items-center max-w-7xl mx-auto">
                     <div className="flex items-center">
                         <img 
-                            src="/logo.png" 
+                            src={darkLogo}
                             alt="BluStyles Logo" 
                             className="h-10 w-auto mr-4"
                         />

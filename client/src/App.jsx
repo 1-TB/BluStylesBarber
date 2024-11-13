@@ -15,31 +15,32 @@ import { ProtectedRoute } from './Pages/CMS/ProtectedRoute';
 
 
 const App = () => {
-    return (
-      <AuthProvider>
-        <Router>
-            <Routes>
-                <Route element={<Layout />}>
-                    <Route index element={<LandingPage />} />
-                    <Route path="/our-cuts" element={<OurCuts />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/booking" element={<BookingPage />} />
-                    <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-                    <Route path="/login" element={<AuthPage />} />
-                    <Route
-                        path="/cms"
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <CMSHome />
-                          </ProtectedRoute>
-                        }
-                      />
-                </Route>
-            </Routes>
-        </Router>
-      </AuthProvider>
-    );
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<LandingPage />} />
+            <Route path="/our-cuts" element={<OurCuts />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/booking" element={<BookingPage />} />
+            <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+          </Route>
+          
+          <Route path="/login" element={<AuthPage />} />
+          <Route
+            path="/cms"
+            element={
+              <ProtectedRoute requireAdmin>
+                <CMSHome />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
 };
 
 export default App;
