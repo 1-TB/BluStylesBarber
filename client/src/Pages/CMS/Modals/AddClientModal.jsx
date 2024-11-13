@@ -65,101 +65,118 @@ const AddClientModal = ({ isOpen, onClose, onAdd }) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle className="text-xl font-bold text-gray-900">Add New Client</DialogTitle>
+            <DialogContent className="w-[95vw] max-w-[425px] p-4 md:p-6 rounded-lg">
+                <DialogHeader className="space-y-2 mb-4">
+                    <DialogTitle className="text-lg md:text-xl font-bold text-gray-900 text-center md:text-left">
+                        Add New Client
+                    </DialogTitle>
                 </DialogHeader>
 
                 {error && (
-                    <Alert variant="destructive" className="mb-4">
+                    <Alert variant="destructive" className="mb-4 text-sm">
                         <AlertDescription>{error}</AlertDescription>
                     </Alert>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                            Name <span className="text-red-500">*</span>
-                        </label>
-                        <Input
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            className="text-gray-900"
-                            placeholder="John Doe"
-                        />
+                    <div className="grid gap-4">
+                        {/* Name Field */}
+                        <div className="space-y-1.5">
+                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                                Name <span className="text-red-500">*</span>
+                            </label>
+                            <Input
+                                id="name"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                className="text-gray-900 h-9 md:h-10"
+                                placeholder="John Doe"
+                                autoComplete="name"
+                            />
+                        </div>
+
+                        {/* Phone Field */}
+                        <div className="space-y-1.5">
+                            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                                Phone <span className="text-red-500">*</span>
+                            </label>
+                            <Input
+                                id="phone"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleChange}
+                                className="text-gray-900 h-9 md:h-10"
+                                placeholder="(123) 456-7890"
+                                type="tel"
+                                autoComplete="tel"
+                            />
+                        </div>
+
+                        {/* Email Field */}
+                        <div className="space-y-1.5">
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                                Email <span className="text-red-500">*</span>
+                            </label>
+                            <Input
+                                id="email"
+                                name="email"
+                                type="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                className="text-gray-900 h-9 md:h-10"
+                                placeholder="john@example.com"
+                                autoComplete="email"
+                            />
+                        </div>
+
+                        {/* Date Fields Container */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Last Visit Field */}
+                            <div className="space-y-1.5">
+                                <label htmlFor="lastVisit" className="block text-sm font-medium text-gray-700">
+                                    Last Visit
+                                </label>
+                                <Input
+                                    id="lastVisit"
+                                    name="lastVisit"
+                                    type="date"
+                                    value={formData.lastVisit}
+                                    onChange={handleChange}
+                                    className="text-gray-900 h-9 md:h-10"
+                                />
+                            </div>
+
+                            {/* Next Visit Field */}
+                            <div className="space-y-1.5">
+                                <label htmlFor="nextVisit" className="block text-sm font-medium text-gray-700">
+                                    Next Visit
+                                </label>
+                                <Input
+                                    id="nextVisit"
+                                    name="nextVisit"
+                                    type="date"
+                                    value={formData.nextVisit}
+                                    onChange={handleChange}
+                                    className="text-gray-900 h-9 md:h-10"
+                                />
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                            Phone <span className="text-red-500">*</span>
-                        </label>
-                        <Input
-                            id="phone"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            className="text-gray-900"
-                            placeholder="(123) 456-7890"
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                            Email <span className="text-red-500">*</span>
-                        </label>
-                        <Input
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className="text-gray-900"
-                            placeholder="john@example.com"
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <label htmlFor="lastVisit" className="block text-sm font-medium text-gray-700">
-                            Last Visit
-                        </label>
-                        <Input
-                            id="lastVisit"
-                            name="lastVisit"
-                            type="date"
-                            value={formData.lastVisit}
-                            onChange={handleChange}
-                            className="text-gray-900"
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <label htmlFor="nextVisit" className="block text-sm font-medium text-gray-700">
-                            Next Visit
-                        </label>
-                        <Input
-                            id="nextVisit"
-                            name="nextVisit"
-                            type="date"
-                            value={formData.nextVisit}
-                            onChange={handleChange}
-                            className="text-gray-900"
-                        />
-                    </div>
-
-                    <div className="flex justify-end space-x-3 pt-4">
+                    {/* Buttons */}
+                    <div className="flex flex-col-reverse md:flex-row justify-end gap-2 md:gap-3 pt-4">
                         <Button
                             type="button"
                             variant="outline"
+                            className="w-full md:w-auto text-gray-900"
                             onClick={handleClose}
                         >
                             Cancel
                         </Button>
                         <Button
                             type="submit"
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white"
-                        >
+                            className="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white">
                             Add Client
                         </Button>
                     </div>
