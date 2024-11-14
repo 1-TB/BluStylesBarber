@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { Button } from './Components/ui/button';
-import { Search, Filter, MoreVertical, Calendar, Clock, User, Phone, Mail } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
+import BookingCard from './Components/BookingCard';
+import EditBookingModal from './Modals/EditBookingModal';
 
 const Bookings = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedBooking, setSelectedBooking] = useState(null);
 
-    // temp data
-    const bookings = [
+    const [bookings, setBookings] = useState([
         {
             id: 1,
             name: "John Doe",
@@ -40,7 +43,62 @@ const Bookings = () => {
             createdAt: "2024-02-18",
             updatedAt: "2024-02-18"
         },
-    ];
+    ]);
+
+    // Handle confirm
+    const handleConfirmBooking = (bookingId) => {
+        setBookings(prevBookings =>
+            prevBookings.map(booking =>
+                booking.id === bookingId
+                    ? { ...booking, status: "confirmed" }
+                    : booking
+            )
+        );
+        // NOTE: connect backend
+        console.log('Confirming booking:', bookingId);
+    };
+
+    // Handle delete
+    const handleDeleteBooking = (bookingId) => {
+        setBookings(prevBookings =>
+            prevBookings.filter(booking => booking.id !== bookingId)
+        );
+        // NOTE: connect backend
+        console.log('Deleting booking:', bookingId);
+    };
+
+    // Handle edit
+    const handleEditClick = (booking) => {
+        setSelectedBooking(booking);
+        setIsEditModalOpen(true);
+    };
+
+    // Handle save edit
+    const handleSaveBooking = (updatedBooking) => {
+        setBookings(prevBookings =>
+            prevBookings.map(booking =>
+                booking.id === updatedBooking.id
+                    ? { ...updatedBooking, updatedAt: new Date().toISOString() }
+                    : booking
+            )
+        );
+        setIsEditModalOpen(false);
+        //NOTE: comnect backend
+        console.log('Saving updated booking:', updatedBooking);
+    };
+
+    //Handle status change
+    const handleStatusChange = (bookingId, newStatus) => {
+        setBookings(prevBookings =>
+            prevBookings.map(booking =>
+                booking.id === bookingId
+                    ? { ...booking, status: newStatus }
+                    : booking
+            )
+        );
+        // NOTE: connect backend
+        console.log('Changing booking status:', bookingId, 'to', newStatus);
+    };
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -72,65 +130,26 @@ const Bookings = () => {
                 {/* Bookings List */}
                 <div className="space-y-4">
                     {bookings.map((booking) => (
-                        <div
-                            key={booking.id}
-                            className="bg-white rounded-lg shadow-sm p-4 md:p-6"
-                        >
-                            <div className="flex justify-between items-start mb-4">
-                                <div>
-                                    <h3 className="text-lg font-semibold text-gray-900">
-                                        {booking.service.name}
-                                    </h3>
-                                    <p className="text-sm text-gray-500">
-                                        ${booking.service.price} - {booking.service.duration} mins
-                                    </p>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className={`px-3 py-1 rounded-full text-sm ${booking.status === 'pending'
-                                        ? 'bg-yellow-100 text-yellow-800'
-                                        : 'bg-green-100 text-green-800'
-                                        }`}>
-                                        {booking.status}
-                                    </span>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                    >
-                                        <MoreVertical className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <div className="flex items-center text-gray-600">
-                                        <User className="h-4 w-4 mr-2" />
-                                        {booking.name}
-                                    </div>
-                                    <div className="flex items-center text-gray-600">
-                                        <Phone className="h-4 w-4 mr-2" />
-                                        {booking.phone}
-                                    </div>
-                                    <div className="flex items-center text-gray-600">
-                                        <Mail className="h-4 w-4 mr-2" />
-                                        {booking.email}
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="flex items-center text-gray-600">
-                                        <Calendar className="h-4 w-4 mr-2" />
-                                        {booking.date}
-                                    </div>
-                                    <div className="flex items-center text-gray-600">
-                                        <Clock className="h-4 w-4 mr-2" />
-                                        {booking.time}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <BookingCard
+                        key={booking.id}
+                        booking={booking}
+                        onConfirm={(id) => handleStatusChange(id, 'confirmed')}
+                        onStatusChange={handleStatusChange}
+                        onEdit={handleEditClick}
+                        onDelete={handleDeleteBooking}
+                        />
                     ))}
                 </div>
             </main>
+
+            {/* Edit Modal */}
+            <EditBookingModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                booking={selectedBooking}
+                onSave={handleSaveBooking}
+                onCancel={() => setIsEditModalOpen(false)}
+            />
         </div>
     );
 };

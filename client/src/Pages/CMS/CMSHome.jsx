@@ -255,8 +255,16 @@ const CMSHome = () => {
                     <div className="overflow-x-auto">
                         <ClientTable
                             clients={clients}
-                            onEdit={handleEditClick}
-                            onMoreClick={handleMoreClick}
+                            onInfoClick={(client) => {
+                                setSelectedClient(client);
+                                setIsInfoModalOpen(true);
+                            }}
+                            onEditClick={(client) => {
+                                setSelectedClient(client);
+                                setIsEditModalOpen(true);
+                            }}
+                            onVisitHistoryClick={handleVisitHistory}
+                            onDeleteClick={handleDeleteClick}
                             isLoading={isLoading}
                         />
                     </div>

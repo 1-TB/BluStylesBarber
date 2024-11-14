@@ -2,14 +2,48 @@ import { useState } from 'react';
 import { Menu, Users, Calendar, MessageSquare, Key, LogOut } from "lucide-react";
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
+import DropdownMenu from './ui/DropdownMenu';
 
 const CMSNavbar = ({
     logoSrc,
     onPasswordChange,
     onLogout,
 }) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
+
+    const menuItems = [
+        {
+            label: 'Clients',
+            onClick: () => navigate('/cms'),
+            icon: <Users className="h-4 w-4" />,
+        },
+        {
+            label: 'Bookings',
+            onClick: () => navigate('/cms/bookings'),
+            icon: <Calendar className="h-4 w-4" />,
+        },
+        {
+            label: 'Contact Requests',
+            onClick: () => navigate('/cms/contacts'),
+            icon: <MessageSquare className="h-4 w-4" />,
+        },
+        {
+            label: '-', // Separator
+            className: 'border-t my-1',
+        },
+        {
+            label: 'Change Password',
+            onClick: onPasswordChange,
+            icon: <Key className="h-4 w-4" />,
+        },
+        {
+            label: 'Logout',
+            onClick: onLogout,
+            icon: <LogOut className="h-4 w-4" />,
+            variant: 'destructive',
+            className: 'text-red-600 hover:bg-red-50',
+        },
+    ];
 
     return (
         <nav className="fixed top-0 left-0 right-0 bg-indigo-900 border-b shadow-sm px-4 md:px-6 py-3 md:py-4 z-50">
@@ -25,84 +59,21 @@ const CMSNavbar = ({
                     </h1>
                 </div>
 
-                {/* Hamburger Menu */}
-                <div className="relative">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-white hover:bg-indigo-800"
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    >
-                        <Menu className="h-6 w-6" />
-                        <span className="sr-only">Open menu</span>
-                    </Button>
-
-                    {/* Dropdown Menu */}
-                    {isMenuOpen && (
-                        <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                            <div className="py-1" role="menu">
-                                {/* Main Management Options */}
-                                <button
-                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    onClick={() => {
-                                        navigate('/cms');
-                                        setIsMenuOpen(false);
-                                    }}
-                                >
-                                    <Users className="mr-2 h-4 w-4" />
-                                    <span>Clients</span>
-                                </button>
-
-                                <button
-                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    onClick={() => {
-                                        navigate('/cms/bookings');
-                                        setIsMenuOpen(false);
-                                    }}
-                                >
-                                    <Calendar className="mr-2 h-4 w-4" />
-                                    <span>Bookings</span>
-                                </button>
-
-                                <button
-                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    onClick={() => {
-                                        navigate('/cms/contacts');
-                                        setIsMenuOpen(false);
-                                    }}
-                                >
-                                    <MessageSquare className="mr-2 h-4 w-4" />
-                                    <span>Contact Requests</span>
-                                </button>
-
-                                <hr className="my-1" />
-
-                                {/* Account Options */}
-                                <button
-                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    onClick={() => {
-                                        onPasswordChange();
-                                        setIsMenuOpen(false);
-                                    }}
-                                >
-                                    <Key className="mr-2 h-4 w-4" />
-                                    <span>Change Password</span>
-                                </button>
-
-                                <button
-                                    className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                    onClick={() => {
-                                        onLogout();
-                                        setIsMenuOpen(false);
-                                    }}
-                                >
-                                    <LogOut className="mr-2 h-4 w-4" />
-                                    <span>Logout</span>
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                <DropdownMenu
+                    items={menuItems}
+                    align="right"
+                    className="relative"
+                    trigger={
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-white bg-indigo-900 hover:bg-indigo-800"
+                        >
+                            <Menu className="h-6 w-6" />
+                            <span className="sr-only">Open menu</span>
+                        </Button>
+                    }
+                />
             </div>
         </nav>
     );
