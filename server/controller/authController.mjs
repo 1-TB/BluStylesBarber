@@ -1,9 +1,9 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
-const User = require("../models/userSchema");
-const validateEmail = require("../utils/validateEmail");
-const transporter = require("../config/nodeMailer");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import User from "../models/userSchema";
+import validateEmail from "../utils/validateEmail";
+import transporter from "../config/nodeMailer";
 
 // Auth Controllers Methods
 export const register = async (req, res) => {

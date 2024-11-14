@@ -1,10 +1,10 @@
-const express = require("express");
-const path = require('path');
-const mongoose = require('mongoose');
-const authRoutes = require('./routes/authRoutes');
-const clientRoutes = require('./routes/clientRoutes');
-const bookingRoutes = require('./routes/bookingRoutes');
-const contactRoutes = require('./routes/contactRoutes');
+import express from "express";
+import path from "path";
+import mongoose from "mongoose";
+import authRoutes from "./routes/authRoutes";
+import clientRoutes from "./routes/clientRoutes";
+import bookingRoutes from "./routes/bookingRoutes";
+import contactRoutes from "./routes/contactRoutes";
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;

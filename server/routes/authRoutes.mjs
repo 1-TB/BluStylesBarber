@@ -1,4 +1,4 @@
-const express = require('express')
+import express from "express"
 const {
   register,
   login,
@@ -14,4 +14,4 @@ router.post('/api/auth/login', login);
 router.post('/api/auth/forgot-password', forgotPassword);
 router.post('/api/auth/reset-password', authenticateToken , resetPassword);
 
-module.exports = router;
+export default router;

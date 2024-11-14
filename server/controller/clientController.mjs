@@ -1,6 +1,6 @@
-const Client = require('../models/clientSchema');
-const validateEmail = require('../utils/validateEmail');
-const validatePhone = require('../utils/validatePhone');
+import Client from "../models/clientSchema";
+import validateEmail from "../utils/validateEmail";
+import validatePhone from "../utils/validatePhone";
 
 // Create a new client
 export const postClient = async (req, res) => {

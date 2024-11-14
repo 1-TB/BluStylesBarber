@@ -1,4 +1,4 @@
-const express = require('express');
+import express from "express";
 const {authenticateToken, isAdmin} = require('../middleware/authenticateToken')
 const {
   postClient,
@@ -15,4 +15,4 @@ router.get("/api/clients", authenticateToken, isAdmin, getClient);
 router.put("/api/clients/:id", authenticateToken, isAdmin, putClient);
 router.delete("/api/clients/:id", authenticateToken, isAdmin, deletedClient);
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const express = require('express');
+import express from "express";
 const {
   createBooking,
   getBookings,
@@ -20,4 +20,4 @@ router.put("/api/bookings/:id", authenticateToken, isAdmin, updateBooking);
 // Delete booking (admin only)
 router.delete("/api/bookings/:id", authenticateToken, isAdmin, deleteBooking);
 
-module.exports = router;
+export default router;
