@@ -10,9 +10,6 @@ import AddClientModal from './Modals/AddClientModal';
 import { Button } from './Components/ui/button';
 import { Alert, AlertDescription } from './Components/ui/alert';
 import ChangePasswordModal from "./Modals/PasswordChangeModel";
-import darkLogo from "../../assets/images/blustyles_logo_dark.png"
-
-
 
 const CMSHome = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -31,7 +28,7 @@ const CMSHome = () => {
     const navigate = useNavigate();
 
 
-    
+
 
     // Fetch clients from backend
     const fetchClients = async (search = '') => {
@@ -134,7 +131,7 @@ const CMSHome = () => {
                     throw new Error('Failed to delete client');
                 }
 
-                setClients(prevClients => 
+                setClients(prevClients =>
                     prevClients.filter(client => client._id !== clientToDelete._id)
                 );
                 setIsInfoModalOpen(false);
@@ -196,11 +193,11 @@ const CMSHome = () => {
                     'Authorization': `Bearer ${user.token}`
                 }
             });
-    
+
             if (!response.ok) {
                 throw new Error('Failed to fetch visit history');
             }
-    
+
             const history = await response.json();
             setVisitHistory(history);
             setIsHistoryModalOpen(true);
@@ -220,72 +217,14 @@ const CMSHome = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Top Navigation Bar */}
-            <nav className="bg-white border-b shadow-sm px-6 py-4">
-                <div className="flex justify-between items-center max-w-7xl mx-auto">
-                    <div className="flex items-center">
-                        <img 
-                            src={darkLogo}
-                            alt="BluStyles Logo" 
-                            className="h-10 w-auto mr-4"
-                        />
-                        <h1 className="text-2xl font-bold text-indigo-900">
-                            BLUSTYLES BARBERSHOP CMS
-                        </h1>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                        <Button
-                            onClick={() => setIsPasswordModalOpen(true)}
-                            variant="outline"
-                            className="flex items-center"
-                        >
-                            <svg
-                                className="w-4 h-4 mr-2"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-                                />
-                            </svg>
-                            Change Password
-                        </Button>
-                        <Button
-                            onClick={handleLogout}
-                            variant="outline"
-                            className="flex items-center text-red-600 hover:text-red-700 hover:bg-red-50"
-                        >
-                            <svg
-                                className="w-4 h-4 mr-2"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                                />
-                            </svg>
-                            Logout
-                        </Button>
-                    </div>
-                </div>
-            </nav>
-    
             {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-6 py-8">
+            <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 md:pt-24 pb-6 md:pb-8">
                 {/* Error Alert */}
                 {error && (
-                    <Alert variant="destructive" className="mb-6 animate-in fade-in slide-in-from-top">
-                        <AlertDescription className="flex items-center">
+                    <Alert variant="destructive" className="mb-4 md:mb-6 animate-in fade-in slide-in-from-top">
+                        <AlertDescription className="flex items-center text-sm md:text-base">
                             <svg
-                                className="w-4 h-4 mr-2"
+                                className="w-4 h-4 mr-2 flex-shrink-0"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -301,36 +240,46 @@ const CMSHome = () => {
                         </AlertDescription>
                     </Alert>
                 )}
-    
+
                 {/* Search and Add Section */}
-                <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 md:mb-6">
                     <ClientSearchBar
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}
                         onAddClick={() => setIsAddModalOpen(true)}
                     />
                 </div>
-    
+
                 {/* Table Section */}
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <ClientTable
-                        clients={clients}
-                        onEdit={handleEditClick}
-                        onMoreClick={handleMoreClick}
-                        isLoading={isLoading}
-                    />
+                    <div className="overflow-x-auto">
+                        <ClientTable
+                            clients={clients}
+                            onInfoClick={(client) => {
+                                setSelectedClient(client);
+                                setIsInfoModalOpen(true);
+                            }}
+                            onEditClick={(client) => {
+                                setSelectedClient(client);
+                                setIsEditModalOpen(true);
+                            }}
+                            onVisitHistoryClick={handleVisitHistory}
+                            onDeleteClick={handleDeleteClick}
+                            isLoading={isLoading}
+                        />
+                    </div>
                 </div>
-    
+
                 {/* Loading Overlay */}
                 {isLoading && (
                     <LoadingOverlay>
                         <div className="flex flex-col items-center">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mb-4"></div>
-                            <p className="text-indigo-900 font-medium">Loading...</p>
+                            <div className="animate-spin rounded-full h-10 w-10 md:h-12 md:w-12 border-b-2 border-indigo-500 mb-3 md:mb-4"></div>
+                            <p className="text-indigo-900 font-medium text-sm md:text-base">Loading...</p>
                         </div>
                     </LoadingOverlay>
                 )}
-    
+
                 {/* Modals */}
                 <EditClientModal
                     isOpen={isEditModalOpen}
@@ -339,7 +288,7 @@ const CMSHome = () => {
                     client={selectedClient}
                     onSave={handleSaveClient}
                 />
-    
+
                 <ClientInfoModal
                     isOpen={isInfoModalOpen}
                     onClose={() => setIsInfoModalOpen(false)}
@@ -351,19 +300,18 @@ const CMSHome = () => {
                     onDelete={handleDeleteClick}
                     onVisitHistory={handleVisitHistory}
                 />
-    
+
                 <AddClientModal
                     isOpen={isAddModalOpen}
                     onClose={() => setIsAddModalOpen(false)}
                     onAdd={handleAddClient}
                 />
-    
+
                 <ChangePasswordModal
                     isOpen={isPasswordModalOpen}
                     onClose={() => setIsPasswordModalOpen(false)}
                 />
             </main>
-
         </div>
     );
 };

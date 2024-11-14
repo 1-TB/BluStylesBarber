@@ -52,26 +52,32 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Change Password</DialogTitle>
+      <DialogContent className="w-[95vw] max-w-[425px] p-4 md:p-6">
+        <DialogHeader className="space-y-2 mb-4">
+          <DialogTitle className="text-lg md:text-xl font-bold text-center md:text-left text-gray-900">
+            Change Password
+          </DialogTitle>
         </DialogHeader>
 
+        {/* Alerts */}
         {error && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="mb-4 text-sm">
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-
         {success && (
-          <Alert>
+          <Alert className="mb-4 text-sm">
             <AlertDescription>{success}</AlertDescription>
           </Alert>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">
+          {/* Current Password */}
+          <div className="space-y-1.5">
+            <label
+              htmlFor="currentPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
               Current Password
             </label>
             <Input
@@ -80,11 +86,17 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               required
+              className="h-9 md:h-10"
+              autoComplete="current-password"
             />
           </div>
 
-          <div>
-            <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">
+          {/* New Password */}
+          <div className="space-y-1.5">
+            <label
+              htmlFor="newPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
               New Password
             </label>
             <Input
@@ -93,11 +105,17 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
+              className="h-9 md:h-10"
+              autoComplete="new-password"
             />
           </div>
 
-          <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+          {/* Confirm Password */}
+          <div className="space-y-1.5">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
               Confirm New Password
             </label>
             <Input
@@ -106,12 +124,28 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              className="h-9 md:h-10"
+              autoComplete="new-password"
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Updating...' : 'Update Password'}
-          </Button>
+          {/* Submit Button */}
+          <div className="pt-2">
+            <Button
+              type="submit"
+              className="w-full h-10 md:h-11 text-sm md:text-base font-medium"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-b-transparent"></span>
+                  Updating...
+                </span>
+              ) : (
+                'Update Password'
+              )}
+            </Button>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

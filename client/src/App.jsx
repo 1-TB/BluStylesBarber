@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './Pages/LandingPage';
@@ -12,7 +11,9 @@ import { AuthProvider } from "./Pages/CMS/AuthContext";
 import { AuthPage } from './Pages/CMS/AuthPage';
 import CMSHome from './Pages/CMS/CMSHome';
 import { ProtectedRoute } from './Pages/CMS/ProtectedRoute';
-
+import CMSLayout from './Components/MSC/CMSLayout';
+import Bookings from './Pages/CMS/Bookings';
+import ContactRequests from './Pages/CMS/ContactRequests';
 
 const App = () => {
   return (
@@ -26,17 +27,22 @@ const App = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/booking" element={<BookingPage />} />
             <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+            <Route path="/login" element={<AuthPage />} />
           </Route>
           
-          <Route path="/login" element={<AuthPage />} />
-          <Route
-            path="/cms"
+          {/* CMS Routes */}
+          <Route 
+            path="/cms" 
             element={
               <ProtectedRoute requireAdmin>
-                <CMSHome />
+                <CMSLayout />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<CMSHome />} />
+            <Route path="bookings" element={<Bookings />} />
+            <Route path="contacts" element={<ContactRequests />} />
+          </Route>
         </Routes>
       </Router>
     </AuthProvider>
@@ -44,5 +50,3 @@ const App = () => {
 };
 
 export default App;
-
-

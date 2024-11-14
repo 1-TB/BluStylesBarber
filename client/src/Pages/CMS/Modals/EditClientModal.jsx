@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import FormattedPhoneInput from '../Components/FormattedPhoneInput';
-import FormattedDateInput from '../Components/FormattedDateInput';
-import FormField from '../Components/FormField';
+import { Dialog } from '../Components/ui/dialog';
+import { DialogContent } from '../Components/ui/dialog';
+import { DialogHeader } from '../Components/ui/dialog';
+import { DialogTitle } from '../Components/ui/dialog';
+import { Input } from '../Components/ui/input';
+import { Button } from '../Components/ui/button';
 
 // Modal to edit client information
 const EditClientModal = ({ isOpen, onClose, client, onSave, onCancel }) => {
@@ -43,91 +47,122 @@ const EditClientModal = ({ isOpen, onClose, client, onSave, onCancel }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-gray-100 rounded-lg w-full max-w-md p-6 relative">
-        <h2 className="text-xl font-bold text-indigo-900 mb-6">
-          EDIT CLIENT INFORMATION
-        </h2>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-bold text-indigo-900">Edit Client Information</DialogTitle>
+        </DialogHeader>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-4">
-            <FormField label="Name" required>
-              <input
-                type="text"
+            {/* Name Field */}
+            <div className="space-y-2">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                Name <span className="text-red-500">*</span>
+              </label>
+              <Input
+                id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="flex-1 p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="text-gray-900"
                 required
               />
-            </FormField>
+            </div>
 
-            <FormField label="Phone" required>
+            {/* Phone Field */}
+            <div className="space-y-2">
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Phone <span className="text-red-500">*</span>
+              </label>
               <FormattedPhoneInput
                 value={formData.phone}
                 onChange={handleChange}
                 required
               />
-            </FormField>
+            </div>
 
-            <FormField label="Email">
-              <input
-                type="email"
+            {/* Email Field */}
+            <div className="space-y-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email <span className="text-red-500">*</span>
+              </label>
+              <Input
+                id="email"
                 name="email"
+                type="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="flex-1 p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="text-gray-900"
+                required
               />
-            </FormField>
+            </div>
 
-            <FormField label="Last Visit">
-              <FormattedDateInput
-                name="lastVisit"
-                value={formData.lastVisit}
-                onChange={handleChange}
-              />
-            </FormField>
+            {/* Date Fields */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label htmlFor="lastVisit" className="block text-sm font-medium text-gray-700">
+                  Last Visit
+                </label>
+                <Input
+                  id="lastVisit"
+                  name="lastVisit"
+                  type="date"
+                  value={formData.lastVisit}
+                  onChange={handleChange}
+                  className="text-gray-900"
+                />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="nextVisit" className="block text-sm font-medium text-gray-700">
+                  Next Visit
+                </label>
+                <Input
+                  id="nextVisit"
+                  name="nextVisit"
+                  type="date"
+                  value={formData.nextVisit}
+                  onChange={handleChange}
+                  className="text-gray-900"
+                />
+              </div>
+            </div>
 
-            <FormField label="Next Visit">
-              <FormattedDateInput
-                name="nextVisit"
-                value={formData.nextVisit}
-                onChange={handleChange}
-              />
-            </FormField>
-
-            <div className="flex items-start">
-              <label className="w-32 text-indigo-900 font-medium mt-2">
-                Notes:
+            {/* Notes Field */}
+            <div className="space-y-2">
+              <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
+                Notes
               </label>
               <textarea
+                id="notes"
                 name="notes"
                 value={formData.notes}
                 onChange={handleChange}
-                className="flex-1 p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full p-2 text-gray-900 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 rows="4"
               />
             </div>
           </div>
 
-          <div className="flex justify-start space-x-4 mt-6">
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Save
-            </button>
-            <button
+          <div className="flex justify-end space-x-3 pt-4">
+            <Button
               type="button"
+              variant="outline"
               onClick={onCancel || onClose}
-              className="bg-red-800 text-white px-6 py-2 rounded-lg hover:bg-red-900 transition-colors"
+              className="text-gray-900"
             >
               Cancel
-            </button>
+            </Button>
+            <Button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+            >
+              Save Changes
+            </Button>
           </div>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

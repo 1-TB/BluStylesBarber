@@ -1,81 +1,126 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '../Components/ui/dialog';
+import { Button } from '../Components/ui/button';
+import {
+    Calendar,
+    Clock,
+    User,
+    Phone,
+    Mail,
+    FileText,
+    History,
+    Pencil,
+    Trash2
+} from 'lucide-react';
 
-// Modal for displaying client information
-// Includes buttons: Visit history, edit, and delete
-const ClientInfoModal = ({ isOpen, onClose, client, onEdit, onDelete, onVisitHistory }) => {
+
+const DialogFooter = ({ children, className = '' }) => (
+    <div className={`flex flex-col-reverse sm:flex-row sm:justify-between space-y-2 space-y-reverse sm:space-y-0 sm:space-x-2 ${className}`}>
+        {children}
+    </div>
+);
+
+const InfoRow = ({ icon: Icon, label, value }) => (
+    <div className="flex items-center py-2 border-b border-gray-100 last:border-0">
+        <Icon className="h-4 w-4 text-gray-500 mr-2" />
+        <span className="w-24 font-medium text-gray-600">{label}:</span>
+        <span className="text-gray-900 flex-1">{value}</span>
+    </div>
+);
+
+const ClientInfoModal = ({
+    isOpen,
+    onClose,
+    client,
+    onEdit,
+    onDelete,
+    onVisitHistory
+}) => {
     if (!isOpen || !client) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-gray-100 rounded-lg w-full max-w-md p-6 relative">
-                <button
-                    onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 transition-colors"
-                >
-                    <X className="h-6 w-6" />
-                </button>
-                <h2 className="text-xl font-bold text-indigo-900 mb-6">
-                    CLIENT INFORMATION
-                </h2>
+        <Dialog open={isOpen} onOpenChange={onClose}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-bold text-indigo-900">
+                        Client Information
+                    </DialogTitle>
+                </DialogHeader>
 
-                <div className="space-y-4">
-                    <div className="flex">
-                        <span className="w-32 text-indigo-900 font-medium">Name:</span>
-                        <span className="text-blue-600">{client.name}</span>
-                    </div>
-
-                    <div className="flex">
-                        <span className="w-32 text-indigo-900 font-medium">Phone:</span>
-                        <span className="text-blue-600">{client.phone}</span>
-                    </div>
-
-                    <div className="flex">
-                        <span className="w-32 text-indigo-900 font-medium">Email:</span>
-                        <span className="text-blue-600">{client.email}</span>
-                    </div>
-
-                    <div className="flex">
-                        <span className="w-32 text-indigo-900 font-medium">Last Visit:</span>
-                        <span className="text-blue-600">{client.lastVisit}</span>
-                    </div>
-
-                    <div className="flex">
-                        <span className="w-32 text-indigo-900 font-medium">Next Visit:</span>
-                        <span className="text-blue-600">{client.nextVisit}</span>
-                    </div>
-
-                    <div className="flex">
-                        <span className="w-32 text-indigo-900 font-medium">Notes:</span>
-                        <span className="text-blue-600">{client.notes || 'No notes available'}</span>
+                <div className="py-4">
+                    <div className="space-y-1">
+                        <InfoRow
+                            icon={User}
+                            label="Name"
+                            value={client.name}
+                        />
+                        <InfoRow
+                            icon={Phone}
+                            label="Phone"
+                            value={client.phone}
+                        />
+                        <InfoRow
+                            icon={Mail}
+                            label="Email"
+                            value={client.email}
+                        />
+                        <InfoRow
+                            icon={Calendar}
+                            label="Last Visit"
+                            value={client.lastVisit || 'Not available'}
+                        />
+                        <InfoRow
+                            icon={Clock}
+                            label="Next Visit"
+                            value={client.nextVisit || 'Not scheduled'}
+                        />
+                        <div className="flex items-start py-2 border-b border-gray-100 last:border-0">
+                            <FileText className="h-4 w-4 text-gray-500 mr-2 mt-0.5" />
+                            <span className="w-24 font-medium text-gray-600">Notes:</span>
+                            <span className="text-gray-900 flex-1">
+                                {client.notes || 'No notes available'}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex justify-between mt-6">
-                    <button
+                <DialogFooter>
+                    <Button
                         onClick={() => onVisitHistory(client)}
-                        className="bg-indigo-900 text-white px-4 py-2 rounded-lg hover:bg-indigo-800 transition-colors"
+                        variant="outline"
+                        className="text-indigo-600 hover:bg-indigo-50"
                     >
+                        <History className="h-4 w-4 mr-2" />
                         Visit History
-                    </button>
-                    <button
-                        onClick={() => onEdit(client)}
-                        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                        Edit
-                    </button>
-                    <button
-                        onClick={() => {
-                            onDelete(client);
-                            onClose();
-                        }}
-                        className="bg-red-800 text-white px-4 py-2 rounded-lg hover:bg-red-900 transition-colors"
-                    >
-                        Delete
-                    </button>
-                </div>
-            </div>
-        </div>
+                    </Button>
+                    <div className="flex space-x-2">
+                        <Button
+                            onClick={() => onEdit(client)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                            <Pencil className="h-4 w-4 mr-2" />
+                            Edit
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                onDelete(client);
+                                onClose();
+                            }}
+                            variant="destructive"
+                            className="bg-red-600 hover:bg-red-700"
+                        >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete
+                        </Button>
+                    </div>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 };
 
