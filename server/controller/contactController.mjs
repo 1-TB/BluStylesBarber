@@ -1,6 +1,6 @@
-const Contact = require('../models/contactSchema');
-const validateEmail = require('../utils/validateEmail');
-const transporter = require('../config/nodeMailer');
+import Contact from "../models/contactSchema";
+import validateEmail from "../utils/validateEmail";
+import transporter from "../config/nodeMailer";
 
 
 // Contact Controllers

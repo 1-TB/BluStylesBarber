@@ -1,11 +1,16 @@
-const express = require("express");
-const path = require('path');
-const mongoose = require('mongoose');
-const authRoutes = require('./routes/authRoutes');
-const clientRoutes = require('./routes/clientRoutes');
-const bookingRoutes = require('./routes/bookingRoutes');
-const contactRoutes = require('./routes/contactRoutes');
-require('dotenv').config();
+import express from "express";
+import path from "path";
+import mongoose from "mongoose";
+import clientRoutes from "./routes/clientRoutes.mjs";
+import bookingRoutes from "./routes/bookingRoutes.mjs";
+import contactRoutes from "./routes/contactRoutes.mjs";
+import authRoutes from './routes/authRoutes.mjs';
+import 'dotenv/config';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const PORT = process.env.PORT || 3001;
 const app = express();

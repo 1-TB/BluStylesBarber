@@ -1,7 +1,8 @@
-const transporter = require('../config/nodeMailer');
-const validateEmail = require('../utils/validateEmail');
-const validatePhone = require('../utils/validatePhone');
-const Booking = require('../models/bookingSchema');
+import transporter from "../config/nodeMailer.mjs";
+import validateEmail from "../utils/validateEmail.mjs";
+import validatePhone from "../utils/validatePhone.mjs";
+import Booking from "../models/bookingSchema.mjs";
+
 
 // Booking Controller Methods
 export const createBooking = async (req, res) => {

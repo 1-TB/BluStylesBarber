@@ -1,5 +1,6 @@
-// Authentication Middleware
-const authenticateToken = (req, res, next) => {
+import jwt from 'jsonwebtoken';
+
+export const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -16,11 +17,9 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
-const isAdmin = (req, res, next) => {
+export const isAdmin = (req, res, next) => {
   if (!req.user.isAdmin) {
     return res.status(403).json({ message: 'Access denied. Admin privileges required.' });
   }
   next();
 };
-
-module.exports = { authenticateToken, isAdmin };
