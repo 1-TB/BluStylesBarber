@@ -3,14 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from "./AuthContext";
 import { Button } from './Components/ui/button';
 import { Alert, AlertDescription } from "./Components/ui/alert";
-import { 
-    Card, 
-    CardHeader, 
-    CardTitle, 
-    CardContent, 
-    CardFooter 
-  } from "./Components/ui/card";
-  import { Input } from "./Components/ui/input";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter
+} from "./Components/ui/card";
+import { Input } from "./Components/ui/input";
+import darkerLogo from '../../assets/images/blustyles_logo_dark.png';
 
 export const AuthPage = () => {
   const [mode, setMode] = useState('login'); // login, register, forgot
@@ -43,14 +44,14 @@ export const AuthPage = () => {
         });
 
         const data = await response.json();
-        
+
         if (!response.ok) {
           throw new Error(data.message);
         }
 
         setSuccess('Registration successful! Please log in.');
         setMode('login');
-      } 
+      }
       else if (mode === 'login') {
         const response = await fetch('/api/auth/login', {
           method: 'POST',
@@ -59,7 +60,7 @@ export const AuthPage = () => {
         });
 
         const data = await response.json();
-        
+
         if (!response.ok) {
           throw new Error(data.message);
         }
@@ -75,7 +76,7 @@ export const AuthPage = () => {
         });
 
         const data = await response.json();
-        
+
         if (!response.ok) {
           throw new Error(data.message);
         }
@@ -94,24 +95,24 @@ export const AuthPage = () => {
       <div className="w-full max-w-md">
         {/* Optional Logo */}
         <div className="flex justify-center mb-8">
-          <img 
-            src="/logo.png" 
-            alt="BluStyles Logo" 
-            className="h-16 w-auto"
-          />
+            <img
+              src={darkerLogo}
+              alt="BluStyles Logo"
+              className="h-40 w-auto cursor-pointer"
+            />
         </div>
 
         <Card className="w-full shadow-xl border-0">
           <CardHeader className="space-y-1">
             <CardTitle className="text-center text-2xl font-bold text-gray-900">
-              {mode === 'login' ? 'Welcome Back' : 
-               mode === 'register' ? 'Create Your Account' : 
-               'Reset Your Password'}
+              {mode === 'login' ? 'Welcome Back' :
+                mode === 'register' ? 'Create Your Account' :
+                  'Reset Your Password'}
             </CardTitle>
             <p className="text-center text-sm text-gray-600">
               {mode === 'login' ? 'Sign in to access the client management system' :
-               mode === 'register' ? 'Sign up to get started with the system' :
-               'Enter your email to receive a reset link'}
+                mode === 'register' ? 'Sign up to get started with the system' :
+                  'Enter your email to receive a reset link'}
             </p>
           </CardHeader>
 
@@ -136,7 +137,7 @@ export const AuthPage = () => {
                 </AlertDescription>
               </Alert>
             )}
-            
+
             {success && (
               <Alert className="bg-green-50 text-green-900 border-green-200">
                 <AlertDescription className="flex items-center">
@@ -213,7 +214,7 @@ export const AuthPage = () => {
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
                 disabled={isLoading}
               >
-                {isLoading ? 
+                {isLoading ?
                   <div className="flex items-center justify-center">
                     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -221,10 +222,10 @@ export const AuthPage = () => {
                     </svg>
                     Processing...
                   </div>
-                  : 
+                  :
                   mode === 'login' ? 'Sign In' :
-                  mode === 'register' ? 'Create Account' :
-                  'Send Reset Link'
+                    mode === 'register' ? 'Create Account' :
+                      'Send Reset Link'
                 }
               </Button>
             </form>

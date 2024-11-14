@@ -19,31 +19,31 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-          <Routes>
-              <Route element={<Layout />}>
-                  <Route index element={<LandingPage />} />
-                  <Route path="/our-cuts" element={<OurCuts />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/booking" element={<BookingPage />} />
-                  <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-                  <Route path="/login" element={<AuthPage />} />
-                  
-                  {/* CMS Routes */}
-                  <Route 
-                      path="/cms" 
-                      element={
-                          <ProtectedRoute requireAdmin>
-                              <CMSLayout />
-                          </ProtectedRoute>
-                      }
-                  >
-                      <Route index element={<CMSHome />} />
-                      <Route path="bookings" element={<Bookings />} />
-                      <Route path="contacts" element={<ContactRequests />} />
-                  </Route>
-              </Route>
-          </Routes>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<LandingPage />} />
+            <Route path="/our-cuts" element={<OurCuts />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/booking" element={<BookingPage />} />
+            <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+            <Route path="/login" element={<AuthPage />} />
+          </Route>
+          
+          {/* CMS Routes */}
+          <Route 
+            path="/cms" 
+            element={
+              <ProtectedRoute requireAdmin>
+                <CMSLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<CMSHome />} />
+            <Route path="bookings" element={<Bookings />} />
+            <Route path="contacts" element={<ContactRequests />} />
+          </Route>
+        </Routes>
       </Router>
     </AuthProvider>
   );
