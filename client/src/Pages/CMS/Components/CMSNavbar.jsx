@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, Users, Calendar, MessageSquare, Key, LogOut } from "lucide-react";
+import { Menu, Users, Calendar, MessageSquare, Key, LogOut, Scissors } from "lucide-react";
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
 import DropdownMenu from './ui/DropdownMenu';
@@ -26,6 +26,11 @@ const CMSNavbar = ({
             label: 'Contact Requests',
             onClick: () => navigate('/cms/contacts'),
             icon: <MessageSquare className="h-4 w-4" />,
+        },
+        {
+            label: 'Haircuts',
+            onClick: () => navigate('/cms/cuts'),
+            icon: <Scissors className="h-4 w-4" />,
         },
         {
             label: '-', // Separator

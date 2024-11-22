@@ -20,16 +20,23 @@ const ContactRequests = () => {
 
     const fetchContacts = async () => {
         try {
-            const response = await fetch('/api/contacts', {
+            const response = await fetch('/api/contact', {
                 headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${user.token}`
                 }
             });
-            if (!response.ok) throw new Error('Failed to fetch contacts');
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to fetch contacts');
+            }
+            
             const data = await response.json();
-            setContacts(data);
+            setContacts(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching contacts:', error);
+            setContacts([]);
         } finally {
             setIsLoading(false);
         }
@@ -38,8 +45,8 @@ const ContactRequests = () => {
     // mark as read
     const handleMarkAsRead = async (contactId) => {
         try {
-            const response = await fetch(`/api/contacts/${contactId}`, {
-                method: 'PATCH',
+            const response = await fetch(`/api/contact/${contactId}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${user.token}`
@@ -68,8 +75,8 @@ const ContactRequests = () => {
     // status change
     const handleStatusChange = async (contactId, newStatus) => {
         try {
-            const response = await fetch(`/api/contacts/${contactId}`, {
-                method: 'PATCH',
+            const response = await fetch(`/api/contact/${contactId}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${user.token}`
@@ -92,7 +99,7 @@ const ContactRequests = () => {
     // Delete
     const handleDelete = async (contactId) => {
         try {
-            const response = await fetch(`/api/contacts/${contactId}`, {
+            const response = await fetch(`/api/contact/${contactId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${user.token}`
@@ -110,7 +117,7 @@ const ContactRequests = () => {
     // Handle reply submission
     const handleSendReply = async (replyMessage) => {
         try {
-            const response = await fetch(`/api/contacts/${selectedContact._id}/reply`, {
+            const response = await fetch(`/api/contact/${selectedContact._id}/reply`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

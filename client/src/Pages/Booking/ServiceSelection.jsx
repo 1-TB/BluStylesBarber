@@ -1,54 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Clock, TrendingUp, Star, Scissors, Search } from 'lucide-react';
 
-const services = [
-    {
-        id: 1,
-        name: "Classic Haircut",
-        duration: 30,
-        price: 25,
-        category: "standard",
-        popular: true,
-        description: "Traditional cut with modern precision",
-        image: "/haircut1.jpg"
-    },
-    {
-        id: 2,
-        name: "Fade & Design",
-        duration: 45,
-        price: 35,
-        category: "specialty",
-        popular: true,
-        description: "Custom fade with unique design patterns",
-        image: "/haircut2.jpg"
-    },
-    {
-        id: 3,
-        name: "Beard Trim & Shape",
-        duration: 20,
-        price: 15,
-        category: "standard",
-        popular: false,
-        description: "Professional beard grooming",
-        image: "/haircut3.jpg"
-    },
-    {
-        id: 4,
-        name: "Full Service Package",
-        duration: 60,
-        price: 50,
-        category: "specialty",
-        popular: true,
-        description: "Haircut, beard trim, and hot towel service",
-        image: "/haircut4.jpg"
-    },
-    // Move to backend?
-];
-
 const ServiceSelection = ({ onServiceSelect }) => {
+    const [services, setServices] = useState([]);
     const [activeFilter, setActiveFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        const storedCuts = localStorage.getItem('cuts');
+        if (storedCuts) {
+            setServices(JSON.parse(storedCuts));
+        }
+    }, []);
 
     const filters = [
         { id: 'all', name: 'All Services', icon: Scissors },

@@ -25,21 +25,21 @@ const ContactRequestCard = ({
     const dropdownItems = [
         {
             label: 'Mark as Unread',
-            onClick: () => onStatusChange(contact.id, 'new'),
+            onClick: () => onStatusChange(contact._id, 'new'),
             icon: <Clock className="h-4 w-4" />,
             className: 'text-blue-600 hover:bg-blue-50',
             hidden: contact.status === 'new'
         },
         {
             label: 'Mark as Read',
-            onClick: () => onMarkAsRead(contact.id),
+            onClick: () => onMarkAsRead(contact._id),
             icon: <CheckCircle2 className="h-4 w-4" />,
             className: 'text-yellow-600 hover:bg-yellow-50',
             hidden: contact.status === 'read'
         },
         {
             label: 'Delete',
-            onClick: () => onDelete(contact.id),
+            onClick: () => onDelete(contact._id),
             icon: <Trash2 className="h-4 w-4" />,
             className: 'text-red-600 hover:bg-red-50',
             variant: 'destructive'
@@ -98,7 +98,7 @@ const ContactRequestCard = ({
                             variant="outline"
                             size="sm"
                             className="text-gray-700"
-                            onClick={() => onMarkAsRead(contact.id)}
+                            onClick={() => onMarkAsRead(contact._id)}
                         >
                             Mark as Read
                         </Button>

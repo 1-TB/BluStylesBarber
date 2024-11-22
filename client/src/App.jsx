@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './Pages/LandingPage';
 import OurCuts from './Pages/OurCuts';
@@ -14,8 +14,30 @@ import { ProtectedRoute } from './Pages/CMS/ProtectedRoute';
 import CMSLayout from './Components/MSC/CMSLayout';
 import Bookings from './Pages/CMS/Bookings';
 import ContactRequests from './Pages/CMS/ContactRequests';
+import CutsPage from './Pages/CMS/CutsPage';
 
 const App = () => {
+  const [cuts, setCuts] = useState([]);
+
+  useEffect(() => {
+    const fetchCuts = async () => {
+      try {
+        const response = await fetch('/api/cuts');
+        if (!response.ok) {
+          throw new Error('Failed to fetch cuts');
+        }
+        const data = await response.json();
+        setCuts(data);
+        // Store cuts in localStorage for other components to use
+        localStorage.setItem('cuts', JSON.stringify(data));
+      } catch (error) {
+        console.error('Error fetching cuts:', error);
+      }
+    };
+
+    fetchCuts();
+  }, []);
+
   return (
     <AuthProvider>
       <Router>
@@ -42,6 +64,7 @@ const App = () => {
             <Route index element={<CMSHome />} />
             <Route path="bookings" element={<Bookings />} />
             <Route path="contacts" element={<ContactRequests />} />
+            <Route path="cuts" element={<CutsPage />} />
           </Route>
         </Routes>
       </Router>

@@ -5,6 +5,7 @@ import clientRoutes from "./routes/clientRoutes.mjs";
 import bookingRoutes from "./routes/bookingRoutes.mjs";
 import contactRoutes from "./routes/contactRoutes.mjs";
 import authRoutes from './routes/authRoutes.mjs';
+import cutsRoutes from './routes/cutsRoutes.mjs';
 import 'dotenv/config';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -25,14 +26,14 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 // Middleware
 app.use(express.static(path.resolve(__dirname, '../client/build')));
-app.use(express.json());
+app.use(express.json({ limit: '50mb' })); // Increased payload limit for base64 images
 
 /* ROUTES */
 app.use(authRoutes);
 app.use(clientRoutes);
 app.use(bookingRoutes);
 app.use(contactRoutes);
-
+app.use(cutsRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

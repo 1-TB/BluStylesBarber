@@ -1,56 +1,21 @@
 import { ZapIcon } from 'lucide-react';
 import FeaturedCutCard from '../Cards/FeaturedCutCard';
 import ScrollChevron from '../MSC/ScrollChevron';
-import { useRef, useState, useEffect } from 'react'
-import tempCutImg from '../../assets/images/blustyles_cuttype_01.jpg'
+import { useRef, useState, useEffect } from 'react';
 
 const FeaturedCuts = ({ cutsRef }) => {
   const scrollContainerRef = useRef(null);
   const [scrollPercentage, setScrollPercentage] = useState(0);
+  const [featuredCuts, setFeaturedCuts] = useState([]);
 
-  {/* Featured cuts data */}
-  const featuredCuts = [
-    { 
-      id: 1, 
-      title: 'Cool Cut #1', 
-      price: '68.75', 
-      time: '45',
-      summary: 'Classic fade with textured top, perfect for a modern professional look',
-      image: tempCutImg 
-    },
-    { 
-      id: 2, 
-      title: 'Cool Cut #2', 
-      price: '33.75', 
-      time: '30',
-      summary: 'Clean taper fade with line up, ideal for a sharp, crisp appearance',
-      image: tempCutImg 
-    },
-    { 
-      id: 3, 
-      title: 'Cool Cut #3', 
-      price: '28.75', 
-      time: '35',
-      summary: 'Low fade with cropped top, great for easy maintenance and style',
-      image: tempCutImg 
-    },
-    { 
-      id: 4, 
-      title: 'Cool Cut #4', 
-      price: '12.75', 
-      time: '25',
-      summary: 'High and tight with subtle fade, perfect for a clean, professional look',
-      image: tempCutImg 
-    },
-    { 
-        id: 5, 
-        title: 'Cool Cut #5', 
-        price: '12.75', 
-        time: '25',
-        summary: 'High and tight with subtle fade, perfect for a clean, professional look',
-        image: tempCutImg 
+  useEffect(() => {
+    const storedCuts = localStorage.getItem('cuts');
+    if (storedCuts) {
+      const cuts = JSON.parse(storedCuts);
+      const specialtyCuts = cuts.filter(cut => cut.specialty); // Filter for specialty cuts
+      setFeaturedCuts(specialtyCuts);
     }
-  ];
+  }, []);
 
   {/* Handles left/right Scroll */}
   useEffect(() => {
@@ -101,23 +66,23 @@ const FeaturedCuts = ({ cutsRef }) => {
           >
             {featuredCuts.map((cut) => (
               <FeaturedCutCard
-                key={cut.id}
-                image={cut.image}
-                title={cut.title}
-                price={cut.price}
-                time={cut.time}
-                summary={cut.summary}
+                key={cut._id} // Assuming _id is used as the unique identifier
+                image={cut.picture} // Assuming picture is the correct field for the image
+                title={cut.name} // Assuming name is the correct field for the title
+                price={cut.price} // Assuming price is available in the cut object
+                time={cut.time} // Assuming time is available in the cut object
+                summary={cut.description} // Assuming description is the correct field for the summary
               />
             ))}
           </div>
 
           {/* Continuous Scroll Indicator */}
-        <div className="mt-4 h-1 bg-gray-200 rounded-full">
-          <div
-            className="h-full bg-blue-500 rounded-full transition-all duration-300"
-            style={{ width: `${scrollPercentage}%` }}
-          />
-        </div>
+          <div className="mt-4 h-1 bg-gray-200 rounded-full">
+            <div
+              className="h-full bg-blue-500 rounded-full transition-all duration-300"
+              style={{ width: `${scrollPercentage}%` }}
+            />
+          </div>
 
         </div>
       </div>
