@@ -1,21 +1,10 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Facebook } from 'lucide-react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const NavBar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const navigate = useNavigate();
     const location = useLocation();
-
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen);
-    };
-
-    const handleNavigation = (path) => {
-        console.log('Navigating to:', path); // Debug log
-        setIsMenuOpen(false);
-        navigate(path);
-    };
 
     const navigationItems = [
         { name: 'HOME', path: '/' },
@@ -27,9 +16,10 @@ const NavBar = () => {
 
     return (
         <div className="relative">
+            {/* Menu Button */}
             <button
-                onClick={toggleMenu}
-                className="fixed top-4 right-4 z-50 p-2 rounded-lg hover:bg-gray-100"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="p-2 rounded-lg hover:bg-black/30"
             >
                 {isMenuOpen ? (
                     <X className="h-6 w-6" />
@@ -38,10 +28,11 @@ const NavBar = () => {
                 )}
             </button>
 
+            {/* Sliding Menu */}
             <div
                 className={`fixed top-0 right-0 h-full w-64 bg-black p-8 transform transition-transform duration-300 ease-in-out ${
                     isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-                } z-40`}
+                } z-50`}
             >
                 <nav className="mt-12">
                     <ul className="space-y-4">
@@ -60,15 +51,15 @@ const NavBar = () => {
                         ))}
                     </ul>
                 </nav>
-
                 <div className="absolute bottom-8 left-8">
-                    <Facebook className="text-white hover:text-gray-300 cursor-pointer" size={24} />
+                    <Facebook className="text-blue-400 hover:text-gray-300 cursor-pointer" size={24} />
                 </div>
             </div>
 
+            {/* Overlay */}
             {isMenuOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 z-30"
+                    className="fixed inset-0 bg-black bg-opacity-50 z-40"
                     onClick={() => setIsMenuOpen(false)}
                 />
             )}

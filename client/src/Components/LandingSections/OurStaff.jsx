@@ -29,12 +29,20 @@ import staffThreeImage from '../../assets/images/blustyles_cuttype_02.jpg';
 
   const OurStaff = () => {
     return (
-      <div className="min-h-screen bg-slate-800 py-16 content-center">
+      <div className="min-h-screen bg-[#001528] py-16 content-center">
         <div className="container mx-auto px-4">
           {/* Header section */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-slate-300 mb-4">OUR STAFF</h2>
-            <ZapIcon className="w-8 h-8 text-blue-400 mx-auto animate-pulse" />
+          <h2 
+              className="text-5xl md:text-6xl lg:text-7xl text-white uppercase"
+              style={{ 
+                fontFamily: "Teko",
+                textShadow: '0 5px 2px rgba(63, 105, 183, 0.2)'
+              }}
+            >
+              Our Staff
+            </h2>
+            <ZapIcon className="w-8 h-8 text-blue-400 mx-auto" />
           </div>
           
           {/* Staff members grid */}

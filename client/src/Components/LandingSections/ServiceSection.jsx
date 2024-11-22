@@ -1,73 +1,99 @@
 import React from 'react';
 import { Scissors, Zap } from 'lucide-react';
-import { motion } from "framer-motion";
 
 const services = [
   {
     id: 1,
-    title: "Haircut Styles",
+    title: "HAIRCUT STYLES",
     description: "Get a fresh look with our wide range of haircut styles...",
-    image: Scissors
+    icon: Scissors
   },
   {
     id: 2,
-    title: "Shaving",
+    title: "SHAVING",
     description: "Experience a smooth and comfortable shave...",
-    image: Scissors
+    icon: Scissors
   },
   {
     id: 3,
-    title: "Trimming",
+    title: "TRIMMING",
     description: "Maintain a neat and tidy appearance...",
-    image: Scissors
+    icon: Scissors
   },
   {
     id: 4,
-    title: "Styling",
-    description: "Let our expert stylists create a look that’s uniquely yours...",
-    image: Scissors
+    title: "STYLING",
+    description: "Let our expert stylists create a look that's uniquely yours...",
+    icon: Scissors
   }
 ];
 
 export default function ServiceSection({ pricingRef }) {
   return (
-    <div className='w-full min-h-screen bg-[#9DAED0] pb-8 lg:pb-0 lg:flex lg:items-center'>
-      <motion.div 
-       initial={{ opacity: 0, y: -100 }}
-       whileInView={{ opacity: 1, y: 0, transition: { delay: 0.5 } }}
-       viewport={{ once: true }}
-       transition={{staggerChildren: 0.2}}
-      className='w-full flex flex-col justify-center items-center space-y-4 p-2'>
-        <div className='font-teko text-4xl text-[#262E3C] mt-4 font-bold'>Our Services</div>
-        <Zap className="w-8 h-8 text-blue-400 mx-auto animate-pulse" />
-        <h1 className='font-bold text-4xl text-center'>Beyond <span className=' text-slate-800'>Expectations</span></h1>
-        <p className='text-center max-w-md sm:max-w-2xl text-[#2A78D0] font-abel text-lg sm:text-xl'>
-          Step into a space where style meets precision...
-        </p>
-        <div
-          className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-md lg:max-w-7xl sm:max-w-xl'>
-          {services.map((service) => (
-            <div key={service.id} className="p-6 bg-gray-800 rounded-lg shadow-lg text-center flex flex-col justify-center items-center">
-              <div className="text-blue-400 mb-4">
-                <service.image size={32} /> {/* Render the icon */}
-              </div>
-              <h4 className="text-2xl font-bold text-white uppercase font-teko">{service.title}</h4>
-              <p className="text-gray-400 mt-2 mb-4 font-abel">{service.description}</p>
-              <button
-                onClick={() => {
-                  if (pricingRef != null) {
-                    pricingRef.current.scrollIntoView({
-                      behavior: 'smooth',
-                    });
-                  }
-                }}
+    <section className='min-h-screen bg-[#9DAED0] w-full py-16 md:py-24 content-center'>
+      <div className='container mx-auto px-4'>
+        <div className='flex flex-col items-center space-y-16'>
+          {/* Header */}
+          <div className='text-center space-y-4'>
+            <h2 
+              className="text-5xl md:text-6xl lg:text-7xl text-[#001528] uppercase"
+              style={{ 
+                fontFamily: "Teko",
+                textShadow: '0 5px 2px rgba(63, 105, 183, 0.2)'
+              }}
+            >
+              Our Services
+            </h2>
+            <Zap className="w-8 h-8 text-white mx-auto" />
+            <p 
+              className="text-2xl text-[#001528] uppercase tracking-[0.1em]"
+              style={{ fontFamily: "Teko" }}
+            >
+              Find it all at BluStyles
+            </p>
+          </div>
+
+          {/* Services Grid */}
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-6xl'>
+            {services.map((service) => (
+              <div 
+                key={service.id} 
+                className="bg-[#001528] p-8 flex flex-col items-center text-center space-y-6 group"
               >
-                View Pricing &rarr;
-              </button>
-            </div>
-          ))}
+                <service.icon className="w-8 h-8 text-blue-400" />
+                
+                <h4 
+                  className="text-3xl text-white uppercase tracking-wide"
+                  style={{ fontFamily: "Teko" }}
+                >
+                  {service.title}
+                </h4>
+                
+                <p 
+                  className="text-gray-400 text-lg"
+                  style={{ fontFamily: "Teko", letterSpacing: "0.05em" }}
+                >
+                  {service.description}
+                </p>
+
+                <button
+                  className="text-blue-400 uppercase text-lg tracking-wide hover:text-white transition-colors duration-300"
+                  style={{ fontFamily: "Teko" }}
+                  onClick={() => {
+                    if (pricingRef?.current) {
+                      pricingRef.current.scrollIntoView({
+                        behavior: 'smooth',
+                      });
+                    }
+                  }}
+                >
+                  View Pricing →
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </section>
   );
 }

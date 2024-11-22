@@ -13,10 +13,11 @@ const Layout = () => {
         <div className="relative min-h-screen bg-black text-white">
             {/* Header with Logo and Icons - Hidden on CMS pages */}
             {!isCMSPage && (
-                <header className="absolute top-0 left-0 right-0 z-50 p-4">
-                    <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div className="w-20 h-20 md:w-24 md:h-24">
-                            <Link to={""}>
+                <header className="fixed top-0 left-0 right-0 z-40 p-4">
+                    <div className="container mx-auto flex justify-between items-center">
+                        {/* Logo */}
+                        <div className="w-16 h-16 md:w-20 md:h-20">
+                            <Link to="/">
                                 <img
                                     src={logoTransparent}
                                     alt="Blu Styles Logo"
@@ -24,14 +25,16 @@ const Layout = () => {
                                 />
                             </Link>
                         </div>
-                        <div className="flex items-center">
-                            <NavBar />
-                        </div>
+                        
+                        {/* Navigation */}
+                        <NavBar />
                     </div>
                 </header>
             )}
+
             {/* Main Content */}
             <Outlet />
+
             {/* Footer - Hidden on CMS pages */}
             {!isCMSPage && <Footer />}
         </div>
