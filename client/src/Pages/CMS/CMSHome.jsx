@@ -23,12 +23,20 @@ const CMSHome = () => {
     const [visitHistory, setVisitHistory] = useState([]);
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+    const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
 
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
+    // Handle window resize
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobileView(window.innerWidth < 768);
+        };
 
-
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Fetch clients from backend
     const fetchClients = async (search = '') => {
@@ -218,13 +226,13 @@ const CMSHome = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 md:pt-24 pb-6 md:pb-8">
+            <main className="w-full max-w-7xl mx-auto px-2 sm:px-4 md:px-6 pt-20 sm:pt-24 md:pt-28 pb-4 sm:pb-6 md:pb-8">
                 {/* Error Alert */}
                 {error && (
-                    <Alert variant="destructive" className="mb-4 md:mb-6 animate-in fade-in slide-in-from-top">
-                        <AlertDescription className="flex items-center text-sm md:text-base">
+                    <Alert variant="destructive" className="mb-3 sm:mb-4 md:mb-6 animate-in fade-in slide-in-from-top">
+                        <AlertDescription className="flex items-center text-xs sm:text-sm md:text-base">
                             <svg
-                                className="w-4 h-4 mr-2 flex-shrink-0"
+                                className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -242,7 +250,7 @@ const CMSHome = () => {
                 )}
 
                 {/* Search and Add Section */}
-                <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 md:mb-6">
+                <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 md:p-6 mb-3 sm:mb-4 md:mb-6">
                     <ClientSearchBar
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}
@@ -266,6 +274,7 @@ const CMSHome = () => {
                             onVisitHistoryClick={handleVisitHistory}
                             onDeleteClick={handleDeleteClick}
                             isLoading={isLoading}
+                            isMobileView={isMobileView}
                         />
                     </div>
                 </div>
@@ -274,8 +283,8 @@ const CMSHome = () => {
                 {isLoading && (
                     <LoadingOverlay>
                         <div className="flex flex-col items-center">
-                            <div className="animate-spin rounded-full h-10 w-10 md:h-12 md:w-12 border-b-2 border-indigo-500 mb-3 md:mb-4"></div>
-                            <p className="text-indigo-900 font-medium text-sm md:text-base">Loading...</p>
+                            <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 border-b-2 border-indigo-500 mb-2 sm:mb-3 md:mb-4"></div>
+                            <p className="text-indigo-900 font-medium text-xs sm:text-sm md:text-base">Loading...</p>
                         </div>
                     </LoadingOverlay>
                 )}
@@ -287,6 +296,7 @@ const CMSHome = () => {
                     onCancel={handleEditCancel}
                     client={selectedClient}
                     onSave={handleSaveClient}
+                    isMobileView={isMobileView}
                 />
 
                 <ClientInfoModal
@@ -299,17 +309,20 @@ const CMSHome = () => {
                     }}
                     onDelete={handleDeleteClick}
                     onVisitHistory={handleVisitHistory}
+                    isMobileView={isMobileView}
                 />
 
                 <AddClientModal
                     isOpen={isAddModalOpen}
                     onClose={() => setIsAddModalOpen(false)}
                     onAdd={handleAddClient}
+                    isMobileView={isMobileView}
                 />
 
                 <ChangePasswordModal
                     isOpen={isPasswordModalOpen}
                     onClose={() => setIsPasswordModalOpen(false)}
+                    isMobileView={isMobileView}
                 />
             </main>
         </div>
