@@ -43,14 +43,20 @@ const FeaturedCuts = ({ cutsRef }) => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-slate-800 p-8 md:p-16 content-center" ref={cutsRef}>
+    <div className="w-full min-h-screen bg-[#001528] p-8 md:p-16 content-center" ref={cutsRef}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h2 className="text-4xl font-bold text-slate-300 mb-4">
-            FEATURED CUTS
-          </h2>
-          <ZapIcon className="w-8 h-8 mx-auto mb-2 text-blue-400 animate-pulse" />
+        <h2 
+              className="text-5xl md:text-6xl lg:text-7xl text-white uppercase"
+              style={{ 
+                fontFamily: "Teko",
+                textShadow: '0 5px 2px rgba(63, 105, 183, 0.2)'
+              }}
+            >
+              Featured Cuts
+            </h2>
+            <ZapIcon className="w-8 h-8 text-blue-400 mx-auto" />
         </div>
 
         {/* Scroll Container */}

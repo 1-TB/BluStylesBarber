@@ -22,7 +22,7 @@ const iconsData = [
   {
     id: 3,
     title: "Trusted",
-    description: "With a 5-star rating and over 100,000 satisfied clients, we are a trusted choice for excellence in barbering.",
+    description: "With a 4.7 star rating on Google with 100+ reviews, we are a trusted choice for excellence in barbering.",
     image: ShieldCheck
   }
   // Move to backend?
@@ -34,21 +34,27 @@ export default function ReviewSection() {
 
   return (
     <div className="min-h-[50vh] w-full p-6 bg-[#9DAED0] flex flex-col gap-4 justify-center items-center ">
-      <h3 className='font-bold text-4xl uppercase font-teko text-[#163163] '>
-        Why Choose Us
-      </h3>
-      <ZapIcon className="w-8 h-8 mb-3 text-blue-950 mx-auto animate-pulse" />
+      <h2 
+              className="pt-6 text-5xl md:text-6xl lg:text-7xl text-[#001528] uppercase"
+              style={{ 
+                fontFamily: "Teko",
+                textShadow: '0 5px 2px rgba(63, 105, 183, 0.2)'
+              }}
+            >
+              Why Choose Us
+            </h2>
+      <ZapIcon className="w-8 h-8 mb-3 text-white mx-auto" />
 
       <div className='grid grid-cols-1 md:grid-cols-3 max-w-7xl gap-4 mb-11 '>
         {iconsData.map((icon) => (
-          <div key={icon.id} className='flex flex-col justify-center items-center max-w-72'>
+          <div key={icon.id} className='flex flex-col items-center max-w-72'>
             <div className="">
-              <icon.image size={32} />
+              <icon.image size={32} className='text-blue-500'/>
             </div>
-            <h6 className='font-bold text-lg uppercase'>{icon.title}</h6>
+            <h6 className='font-bold text-lg uppercase text-[#001528]'>{icon.title}</h6>
             <div className="w-16 border-b-4 border-gray-800 mb-4"></div>
-            <div className='max-w-96'>
-              <p className='text-center'>
+            <div className='max-w-96 text-[#001528]'>
+              <p className='text-center font-abel text-lg'>
                 {icon.description}
               </p>
             </div>

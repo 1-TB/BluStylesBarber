@@ -91,7 +91,7 @@ export default function ReviewCarousel() {
   const currentReview = reviews[currentReviewIndex]; // Get the current review based on the index
 
   return (
-    <div className="col-span-2 row-start-2 xl:row-start-1 xl:col-start-2 xl:col-span-1 bg-gray-800 rounded shadow p-4 flex flex-col items-center space-y-4 relative max-h-80 min-h-72 pt-10 justify-start mt-16 sm:mt-8">
+    <div className="col-span-2 row-start-2 xl:row-start-1 xl:col-start-2 xl:col-span-1 bg-[#001528] rounded shadow p-4 flex flex-col items-center space-y-4 relative max-h-80 min-h-72 pt-10 justify-start mt-16 sm:mt-8">
       <div className="flex flex-col justify-center items-center space-y-3 w-full">
         <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
           <img

@@ -1,4 +1,5 @@
-import React from 'react';
+import {React} from 'react';
+import { Link } from 'react-router-dom';
 import { ZapIcon } from 'lucide-react';
 import HoverButton from '../MSC/HoverButton';
 import leftSideImage from '../../assets/images/blustyles_cuttype_02.jpg';
@@ -13,7 +14,7 @@ const services = [
 
 const PriceList = ( { priceRef } ) => {
   return (
-    <div className="min-h-screen bg-slate-800 flex" ref={priceRef}>
+    <div className="min-h-screen bg-[#9DAED0] flex" ref={priceRef}>
       {/* Left side image */}
       <div className="hidden md:block w-1/2 contrast-125 ">
         <img
@@ -24,13 +25,21 @@ const PriceList = ( { priceRef } ) => {
       </div>
 
       {/* Right side prices */}
-      <div className="w-full md:w-1/2 bg-slate-300/90 p-8 md:p-16 flex flex-col justify-center">
+      <div className="w-full md:w-1/2 bg-[#9DAED0] p-8 md:p-16 flex flex-col justify-center">
         <div className="max-w-lg mx-auto w-full">
           {/* Header */}
           <div className="mb-12">
-            <h2 className="text-4xl font-bold text-slate-800 mb-4">Prices List</h2>
-            <ZapIcon className="w-8 h-8 mb-2 text-blue-400 animate-pulse" />
-            <p className="text-slate-600">
+          <h2 
+              className="text-5xl md:text-6xl lg:text-7xl text-[#001528] uppercase"
+              style={{ 
+                fontFamily: "Teko",
+                textShadow: '0 5px 2px rgba(63, 105, 183, 0.2)'
+              }}
+            >
+              The Prices
+            </h2>
+            <ZapIcon className="w-10 h-10 text-white pb-2" />
+            <p className="text-[#001528] font-semibold text-lg" style={{fontFamily: "Abel"}}>
               Dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
               exercitation ullamco laboris nisi ut.
             </p>
@@ -41,22 +50,27 @@ const PriceList = ( { priceRef } ) => {
             {services.map((service) => (
                 <div
                 key={service.name}
-                className="flex justify-between pb-2 border-b border-slate-400"
+                className="flex justify-between pb-2 border-b border-white/50"
                 >
                 <div className="flex flex-col">
-                    <span className="text-slate-800 font-medium">{service.name}</span>
+                    <span className="text-[#001528] font-bold text-lg" style={{fontFamily: "Abel"}}>{service.name}</span>
                     <span className="text-blue-500 text-xs">{service.time} mins</span>
                 </div>
-                <span className="text-blue-500 font-semibold">${service.price}</span>
+                <span className="text-[#001528] text-lg">${service.price}</span>
                 </div>
             ))}
             </div>
-          {/* Call button - note: trigger phone number dial screen on phone? */}
-          <HoverButton 
-            onClick={() => console.log('Call initiate.')}
-            className="w-full sm:w-auto">
-            Call to Book
-          </HoverButton>
+          <Link 
+                  to="/booking"
+                  className="inline-block"
+                >
+                  <button 
+                    className="bg-[#001528] text-white border border-[#001528]/40 px-8 sm:px-12 md:px-16 py-3 md:py-4 uppercase text-base sm:text-xl hover:bg-[#001528]/80 transition-all duration-300"
+                    style={{ fontFamily: "Teko", letterSpacing: "0.1em" }}
+                  >
+                    BOOK TODAY
+                  </button>
+                </Link>
         </div>
       </div>
     </div>
