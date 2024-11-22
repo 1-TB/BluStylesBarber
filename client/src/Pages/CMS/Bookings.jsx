@@ -1,70 +1,84 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from './Components/ui/button';
 import { Search, Filter } from 'lucide-react';
 import BookingCard from './Components/BookingCard';
 import EditBookingModal from './Modals/EditBookingModal';
+import { useAuth } from './AuthContext';
 
 const Bookings = () => {
     const [searchQuery, setSearchQuery] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedBooking, setSelectedBooking] = useState(null);
+    const [bookings, setBookings] = useState([]);
+    const { user } = useAuth();
 
-    const [bookings, setBookings] = useState([
-        {
-            id: 1,
-            name: "John Doe",
-            email: "john@example.com",
-            phone: "417-555-0123",
-            date: "12-02-2024",
-            time: "14:00",
-            service: {
-                name: "Haircut",
-                duration: 30,
-                price: 25
-            },
-            status: "pending",
-            createdAt: "2024-02-18",
-            updatedAt: "2024-02-18"
-        },
-        {
-            id: 2,
-            name: "John Deere",
-            email: "johnn@example.com",
-            phone: "417-000-0123",
-            date: "12-01-2024",
-            time: "12:00",
-            service: {
-                name: "Haircut",
-                duration: 35,
-                price: 30
-            },
-            status: "pending",
-            createdAt: "2024-02-18",
-            updatedAt: "2024-02-18"
-        },
-    ]);
+    // Fetch bookings on component mount
+    useEffect(() => {
+        fetchBookings();
+    }, []);
+
+    const fetchBookings = async () => {
+        try {
+            const response = await fetch('/api/bookings', {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
+            if (!response.ok) throw new Error('Failed to fetch bookings');
+            const data = await response.json();
+            setBookings(data);
+        } catch (error) {
+            console.error('Error fetching bookings:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     // Handle confirm
-    const handleConfirmBooking = (bookingId) => {
-        setBookings(prevBookings =>
-            prevBookings.map(booking =>
-                booking.id === bookingId
-                    ? { ...booking, status: "confirmed" }
-                    : booking
-            )
-        );
-        // NOTE: connect backend
-        console.log('Confirming booking:', bookingId);
+    const handleConfirmBooking = async (bookingId) => {
+        try {
+            const response = await fetch(`/api/bookings/${bookingId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                },
+                body: JSON.stringify({ status: 'confirmed' })
+            });
+
+            if (!response.ok) throw new Error('Failed to confirm booking');
+            
+            setBookings(prevBookings =>
+                prevBookings.map(booking =>
+                    booking._id === bookingId
+                        ? { ...booking, status: "confirmed" }
+                        : booking
+                )
+            );
+        } catch (error) {
+            console.error('Error confirming booking:', error);
+        }
     };
 
     // Handle delete
-    const handleDeleteBooking = (bookingId) => {
-        setBookings(prevBookings =>
-            prevBookings.filter(booking => booking.id !== bookingId)
-        );
-        // NOTE: connect backend
-        console.log('Deleting booking:', bookingId);
+    const handleDeleteBooking = async (bookingId) => {
+        try {
+            const response = await fetch(`/api/bookings/${bookingId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
+
+            if (!response.ok) throw new Error('Failed to delete booking');
+
+            setBookings(prevBookings =>
+                prevBookings.filter(booking => booking._id !== bookingId)
+            );
+        } catch (error) {
+            console.error('Error deleting booking:', error);
+        }
     };
 
     // Handle edit
@@ -74,31 +88,62 @@ const Bookings = () => {
     };
 
     // Handle save edit
-    const handleSaveBooking = (updatedBooking) => {
-        setBookings(prevBookings =>
-            prevBookings.map(booking =>
-                booking.id === updatedBooking.id
-                    ? { ...updatedBooking, updatedAt: new Date().toISOString() }
-                    : booking
-            )
-        );
-        setIsEditModalOpen(false);
-        //NOTE: comnect backend
-        console.log('Saving updated booking:', updatedBooking);
+    const handleSaveBooking = async (updatedBooking) => {
+        try {
+            const response = await fetch(`/api/bookings/${updatedBooking._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                },
+                body: JSON.stringify(updatedBooking)
+            });
+
+            if (!response.ok) throw new Error('Failed to update booking');
+
+            setBookings(prevBookings =>
+                prevBookings.map(booking =>
+                    booking._id === updatedBooking._id
+                        ? { ...updatedBooking, updatedAt: new Date().toISOString() }
+                        : booking
+                )
+            );
+            setIsEditModalOpen(false);
+        } catch (error) {
+            console.error('Error updating booking:', error);
+        }
     };
 
     //Handle status change
-    const handleStatusChange = (bookingId, newStatus) => {
-        setBookings(prevBookings =>
-            prevBookings.map(booking =>
-                booking.id === bookingId
-                    ? { ...booking, status: newStatus }
-                    : booking
-            )
-        );
-        // NOTE: connect backend
-        console.log('Changing booking status:', bookingId, 'to', newStatus);
+    const handleStatusChange = async (bookingId, newStatus) => {
+        console.log('BookingId:', bookingId);
+        try {
+            const response = await fetch(`/api/bookings/${bookingId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (!response.ok) throw new Error('Failed to update booking status');
+
+            setBookings(prevBookings =>
+                prevBookings.map(booking =>
+                    booking._id === bookingId
+                        ? { ...booking, status: newStatus }
+                        : booking
+                )
+            );
+        } catch (error) {
+            console.error('Error updating booking status:', error);
+        }
     };
+
+    if (isLoading) {
+        return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>;
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -131,12 +176,12 @@ const Bookings = () => {
                 <div className="space-y-4">
                     {bookings.map((booking) => (
                         <BookingCard
-                        key={booking.id}
-                        booking={booking}
-                        onConfirm={(id) => handleStatusChange(id, 'confirmed')}
-                        onStatusChange={handleStatusChange}
-                        onEdit={handleEditClick}
-                        onDelete={handleDeleteBooking}
+                            key={booking._id}
+                            booking={booking}
+                            onConfirm={(id) => handleStatusChange(id, 'confirmed')}
+                            onStatusChange={handleStatusChange}
+                            onEdit={handleEditClick}
+                            onDelete={handleDeleteBooking}
                         />
                     ))}
                 </div>

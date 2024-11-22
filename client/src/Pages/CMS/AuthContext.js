@@ -51,8 +51,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>; // Or your loading component
-  }
+    return <div>Loading...</div>;
+  } // Added missing closing brace
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
@@ -61,10 +61,12 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
+const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === null) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
+
+export { useAuth };

@@ -124,7 +124,7 @@ export const updateBooking = async (req, res) => {
     const { status } = req.body;
     const booking = await Booking.findByIdAndUpdate(
       req.params.id,
-      { status },
+      { $set: req.body },
       { new: true }
     );
 
@@ -132,33 +132,35 @@ export const updateBooking = async (req, res) => {
       return res.status(404).json({ message: 'Booking not found' });
     }
 
-    // Send status update email to customer
-    const emailContent = {
-      confirmed: {
-        subject: 'Booking Confirmed - Blu Styles Barbershop',
-        html: `
-          <h2>Your booking has been confirmed!</h2>
-          <p>We're looking forward to seeing you on ${booking.date.toLocaleDateString()} at ${booking.time}.</p>
-          <p>Service: ${booking.service.name}</p>
-        `
-      },
-      cancelled: {
-        subject: 'Booking Cancelled - Blu Styles Barbershop',
-        html: `
-          <h2>Your booking has been cancelled</h2>
-          <p>If you didn't request this cancellation, please contact us immediately.</p>
-          <p>Original appointment: ${booking.date.toLocaleDateString()} at ${booking.time}</p>
-        `
-      }
-    };
+    // Send status update email to customer if status changed
+    if (status) {
+      const emailContent = {
+        confirmed: {
+          subject: 'Booking Confirmed - Blu Styles Barbershop',
+          html: `
+            <h2>Your booking has been confirmed!</h2>
+            <p>We're looking forward to seeing you on ${booking.date.toLocaleDateString()} at ${booking.time}.</p>
+            <p>Service: ${booking.service.name}</p>
+          `
+        },
+        cancelled: {
+          subject: 'Booking Cancelled - Blu Styles Barbershop',
+          html: `
+            <h2>Your booking has been cancelled</h2>
+            <p>If you didn't request this cancellation, please contact us immediately.</p>
+            <p>Original appointment: ${booking.date.toLocaleDateString()} at ${booking.time}</p>
+          `
+        }
+      };
 
-    if (emailContent[status]) {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: booking.email,
-        subject: emailContent[status].subject,
-        html: emailContent[status].html
-      });
+      if (emailContent[status]) {
+        await transporter.sendMail({
+          from: process.env.EMAIL_USER,
+          to: booking.email,
+          subject: emailContent[status].subject,
+          html: emailContent[status].html
+        });
+      }
     }
 
     res.json(booking);

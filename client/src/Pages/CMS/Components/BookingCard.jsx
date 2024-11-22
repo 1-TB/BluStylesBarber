@@ -22,14 +22,14 @@ const BookingCard = ({
     const dropdownItems = [
         {
             label: 'Confirm',
-            onClick: () => onConfirm(booking.id),
+            onClick: () => onConfirm(booking._id),
             icon: <CheckCircle2 className="h-4 w-4" />,
             className: 'text-indigo-600 hover:bg-indigo-50',
             hidden: booking.status === 'confirmed'
         },
         {
             label: 'Mark as Pending',
-            onClick: () => onStatusChange(booking.id, 'pending'),
+            onClick: () => onStatusChange(booking._id, 'pending'),
             icon: <Clock3 className="h-4 w-4" />,
             className: 'text-yellow-600 hover:bg-yellow-50',
             hidden: booking.status === 'pending'
@@ -42,7 +42,7 @@ const BookingCard = ({
         },
         {
             label: 'Delete',
-            onClick: () => onDelete(booking.id),
+            onClick: () => onDelete(booking._id),
             icon: <Trash2 className="h-4 w-4" />,
             className: 'text-red-600 hover:bg-red-50',
             variant: 'destructive'

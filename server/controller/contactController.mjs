@@ -1,6 +1,6 @@
-import Contact from "../models/contactSchema";
-import validateEmail from "../utils/validateEmail";
-import transporter from "../config/nodeMailer";
+import validateEmail from "../utils/validateEmail.mjs";
+import transporter from "../config/nodeMailer.mjs";
+import Contact from "../models/contactSchema.mjs";
 
 
 // Contact Controllers
@@ -49,8 +49,8 @@ export const createContact = async (req, res) => {
   }
 };
 
-//Get Contacts
-export const getContact = async (req, res) => {
+// Get Contacts
+export const getContacts = async (req, res) => {
   try {
     const { status } = req.query;
     let query = {};

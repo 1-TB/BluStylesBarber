@@ -1,46 +1,62 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Filter } from 'lucide-react';
 import { Button } from './Components/ui/button';
 import ContactRequestCard from './Components/ContactRequestCard';
 import ContactReplyModal from './Modals/ContactReplyModal';
+import { useAuth } from './AuthContext';
 
 const ContactRequests = () => {
     const [searchQuery, setSearchQuery] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
     const [selectedContact, setSelectedContact] = useState(null);
+    const [contacts, setContacts] = useState([]);
+    const { user } = useAuth();
 
-    // temp data
-    const [contacts, setContacts] = useState([
-        {
-            id: 1,
-            name: "John Smith",
-            email: "john@example.com",
-            message: "I'm interested in learning more about your services and pricing.",
-            status: "new",
-            createdAt: "2024-02-18T10:00:00",
-            updatedAt: "2024-02-18T10:00:00"
-        },
-        {
-            id: 2,
-            name: "Cool Fella",
-            email: "cool@example.com",
-            message: "I'm a cool guy",
-            status: "read",
-            createdAt: "2024-02-18T10:00:00",
-            updatedAt: "2024-02-18T10:00:00"
-        },
-    ]);
+    // Fetch contacts on component mount
+    useEffect(() => {
+        fetchContacts();
+    }, []);
+
+    const fetchContacts = async () => {
+        try {
+            const response = await fetch('/api/contacts', {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
+            if (!response.ok) throw new Error('Failed to fetch contacts');
+            const data = await response.json();
+            setContacts(data);
+        } catch (error) {
+            console.error('Error fetching contacts:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     // mark as read
-    const handleMarkAsRead = (contactId) => {
-        setContacts(contacts.map(contact =>
-            contact.id === contactId
-                ? { ...contact, status: 'read' }
-                : contact
-        ));
-         // NOTE: connect backend
-         console.log('Marking contact as read:', contactId);
+    const handleMarkAsRead = async (contactId) => {
+        try {
+            const response = await fetch(`/api/contacts/${contactId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                },
+                body: JSON.stringify({ status: 'read' })
+            });
+
+            if (!response.ok) throw new Error('Failed to mark contact as read');
+
+            setContacts(contacts.map(contact =>
+                contact._id === contactId
+                    ? { ...contact, status: 'read' }
+                    : contact
+            ));
+        } catch (error) {
+            console.error('Error marking contact as read:', error);
+        }
     };
 
     // respond
@@ -50,32 +66,69 @@ const ContactRequests = () => {
     };
 
     // status change
-    const handleStatusChange = (contactId, newStatus) => {
-        setContacts(contacts.map(contact =>
-            contact.id === contactId
-                ? { ...contact, status: newStatus }
-                : contact
-        ));
-        // NOTE: connect backend
-        console.log('Changing contact status:', contactId, 'to', newStatus);
+    const handleStatusChange = async (contactId, newStatus) => {
+        try {
+            const response = await fetch(`/api/contacts/${contactId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (!response.ok) throw new Error('Failed to update contact status');
+
+            setContacts(contacts.map(contact =>
+                contact._id === contactId
+                    ? { ...contact, status: newStatus }
+                    : contact
+            ));
+        } catch (error) {
+            console.error('Error updating contact status:', error);
+        }
     };
 
     // Delete
-    const handleDelete = (contactId) => {
-        setContacts(contacts.filter(contact => contact.id !== contactId));
-        // NOTE: connect backend
-        console.log('Deleting contact:', contactId);
+    const handleDelete = async (contactId) => {
+        try {
+            const response = await fetch(`/api/contacts/${contactId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
+
+            if (!response.ok) throw new Error('Failed to delete contact');
+
+            setContacts(contacts.filter(contact => contact._id !== contactId));
+        } catch (error) {
+            console.error('Error deleting contact:', error);
+        }
     };
 
     // Handle reply submission
-    const handleSendReply = (replyMessage) => {
-        console.log('Sending reply to:', selectedContact?.email);
-        console.log('Reply message:', replyMessage);
-        handleStatusChange(selectedContact?.id, 'responded');
-        setIsReplyModalOpen(false);
-        // NOTE: connect backend
-        console.log('Sending reply to:', selectedContact.email);
-        console.log('Reply message:', replyMessage);
+    const handleSendReply = async (replyMessage) => {
+        try {
+            const response = await fetch(`/api/contacts/${selectedContact._id}/reply`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                },
+                body: JSON.stringify({
+                    email: selectedContact.email,
+                    message: replyMessage
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to send reply');
+
+            handleStatusChange(selectedContact._id, 'responded');
+            setIsReplyModalOpen(false);
+        } catch (error) {
+            console.error('Error sending reply:', error);
+        }
     };
 
     return (
@@ -106,16 +159,22 @@ const ContactRequests = () => {
 
                 {/* Contact Requests List */}
                 <div className="space-y-4">
-                    {contacts.map((contact) => (
-                        <ContactRequestCard
-                            key={contact.id}
-                            contact={contact}
-                            onMarkAsRead={handleMarkAsRead}
-                            onRespond={handleRespond}
-                            onStatusChange={handleStatusChange}
-                            onDelete={handleDelete}
-                        />
-                    ))}
+                    {isLoading ? (
+                        <div>Loading...</div>
+                    ) : contacts.length === 0 ? (
+                        <div>No contact requests found</div>
+                    ) : (
+                        contacts.map((contact) => (
+                            <ContactRequestCard
+                                key={contact._id}
+                                contact={contact}
+                                onMarkAsRead={handleMarkAsRead}
+                                onRespond={handleRespond}
+                                onStatusChange={handleStatusChange}
+                                onDelete={handleDelete}
+                            />
+                        ))
+                    )}
                 </div>
 
                 {/* Reply Modal */}

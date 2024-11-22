@@ -15,7 +15,7 @@ router.post("/api/bookings", createBooking);
 router.get("/api/bookings", authenticateToken, isAdmin, getBookings);
 
 // Update booking status (admin only)
-router.put("/api/bookings/:id", authenticateToken, isAdmin, updateBooking);
+router.patch("/api/bookings/:id", authenticateToken, isAdmin, updateBooking);
 
 // Delete booking (admin only)
 router.delete("/api/bookings/:id", authenticateToken, isAdmin, deleteBooking);
