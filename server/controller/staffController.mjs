@@ -1,3 +1,4 @@
+import e from 'express';
 import User from '../models/userSchema.mjs';
 import validateEmail from '../utils/validateEmail.mjs';
 import bcrypt from "bcryptjs";
@@ -75,4 +76,30 @@ export const deleteStaffbyId = async (req, res) => {
     res.status(500).json({ message: 'Failed to delete Staff.'})
   }
 
+}
+
+export const editStaffById = async (req, res) => {
+  try {
+  const {id} = req.params;
+  const staffUpdates = req.body;
+
+  const salt = await bcrypt.genSalt(10);
+  staffUpdates.password = await bcrypt.hash(updates.password, salt);
+
+  const updatedStaff = await User.findByIdAndUpdate(
+    id,
+    {
+      $set: staffUpdates
+    },
+    { new: true, runValidators: true}
+  ).select('-password');
+
+  if (!updatedStaff) {
+    return res.status(404).json({ message: 'Staff not found' });
+  }
+
+  res.json(updatedStaff);
+  }catch (error) {
+    res.status(400).json({ message: 'Error updating staff', error: error.message });
+  }
 }

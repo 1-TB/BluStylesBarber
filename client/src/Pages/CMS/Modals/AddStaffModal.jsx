@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -10,7 +10,7 @@ import { Input } from "../Components/ui/input";
 import { Button } from "../Components/ui/button";
 import { useAuth } from "../AuthContext";
 
-const AddStaffModal = ({ isOpen, onClose }) => {
+const AddStaffModal = ({ isOpen, onClose, initialData = null, onSuccessfulSubmit }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -24,6 +24,20 @@ const AddStaffModal = ({ isOpen, onClose }) => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
   const { user } = useAuth();
+
+  // Update form when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        ...initialData,
+        password: "" // Always reset password field
+      });
+      setSelectedPhoto(initialData.image || null);
+    } else {
+      // Reset form when modal is opened without initial data
+      resetForm();
+    }
+  }, [initialData, isOpen]);
 
   const base64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -48,15 +62,21 @@ const AddStaffModal = ({ isOpen, onClose }) => {
     e.preventDefault();
     setError("");
 
-    // Basic validation to match controller method
-    if (!formData.name || !formData.password || !formData.email || !formData.image || !formData.role) {
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.role || 
+        (!initialData && (!formData.password || !formData.image))) {
       setError("Please fill in all required fields");
       return;
     }
 
     try {
-      const response = await fetch("/api/staff", {
-        method: 'POST',
+      const url = initialData 
+        ? `/api/staff/${initialData._id}` 
+        : "/api/staff";
+      const method = initialData ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method: method,
         headers: {
           'Authorization': `Bearer ${user.token}`,
           'Content-Type': 'application/json' 
@@ -66,12 +86,16 @@ const AddStaffModal = ({ isOpen, onClose }) => {
 
       const data = await response.json();
       console.log(data);
-      
-      handleClose()
-      onClose(); // Close modal on successful submission
+      if (response.ok && onSuccessfulSubmit) {
+        onSuccessfulSubmit();
+      }
+      handleClose();
     } catch (err) {
       console.error('Error uploading staff:', err);
-      setError("Failed to create staff member");
+      setError(initialData 
+        ? "Failed to update staff member" 
+        : "Failed to create staff member"
+      );
     }
   };
 
@@ -83,7 +107,7 @@ const AddStaffModal = ({ isOpen, onClose }) => {
     }));
   };
 
-  const handleClose = () => {
+  const resetForm = () => {
     setFormData({
       email: "",
       password: "",
@@ -93,14 +117,21 @@ const AddStaffModal = ({ isOpen, onClose }) => {
       isAdmin: false,
       isStaff: true
     });
+    setSelectedPhoto(null);
     setError("");
+  };
+
+  const handleClose = () => {
+    resetForm();
     onClose();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent>
-        <DialogTitle className="mb-4">Add New Staff Member</DialogTitle>
+        <DialogTitle className="mb-4">
+          {initialData ? "Edit Staff Member" : "Add New Staff Member"}
+        </DialogTitle>
 
         {error && (
           <Alert variant="destructive" className="text-sm mb-4">
@@ -170,10 +201,10 @@ const AddStaffModal = ({ isOpen, onClose }) => {
               />
             </div>
 
-            {/*Image Input */}
+            {/* Image Input */}
             <div>
               <label htmlFor="image" className="font-medium text-gray-700">
-                Add Image <span className="text-red-500">*</span>
+                {initialData ? "Update Image" : "Add Image"} {!initialData && <span className="text-red-500">*</span>}
               </label>
               <Input
                 id="image"
@@ -182,11 +213,23 @@ const AddStaffModal = ({ isOpen, onClose }) => {
                 className="text-gray-900 h-9 md:h-10"
                 onChange={handlePhotoChange}
               />
+              
+              {/* Show current image if in edit mode */}
+              {initialData && selectedPhoto && (
+                <div className="mt-2">
+                  <p className="text-sm text-gray-600 mb-2">Current Image:</p>
+                  <img 
+                    src={selectedPhoto} 
+                    alt="Current Staff" 
+                    className="w-32 h-32 object-cover rounded"
+                  />
+                </div>
+              )}
             </div>
 
             <div className="flex justify-center">
               <Button className="w-24" type="submit">
-                Submit
+                {initialData ? "Update" : "Submit"}
               </Button>
             </div>
           </div>
