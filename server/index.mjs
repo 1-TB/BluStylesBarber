@@ -5,15 +5,19 @@ import clientRoutes from "./routes/clientRoutes.mjs";
 import bookingRoutes from "./routes/bookingRoutes.mjs";
 import contactRoutes from "./routes/contactRoutes.mjs";
 import authRoutes from './routes/authRoutes.mjs';
+import staffRoutes from './routes/staffRoutes.mjs'
 import 'dotenv/config';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const PORT = process.env.PORT || 3001;
 const app = express();
+
+
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
@@ -32,7 +36,7 @@ app.use(authRoutes);
 app.use(clientRoutes);
 app.use(bookingRoutes);
 app.use(contactRoutes);
-
+app.use(staffRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

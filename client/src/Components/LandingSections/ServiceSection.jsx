@@ -1,7 +1,6 @@
 import React from 'react';
 import { Scissors, Zap } from 'lucide-react';
 import { motion } from "framer-motion";
-
 const services = [
   {
     id: 1,
@@ -49,7 +48,7 @@ export default function ServiceSection({ pricingRef }) {
           {services.map((service) => (
             <div key={service.id} className="p-6 bg-gray-800 rounded-lg shadow-lg text-center flex flex-col justify-center items-center">
               <div className="text-blue-400 mb-4">
-                <service.image size={32} /> {/* Render the icon */}
+                  <service.image size={32} /> 
               </div>
               <h4 className="text-2xl font-bold text-white uppercase font-teko">{service.title}</h4>
               <p className="text-gray-400 mt-2 mb-4 font-abel">{service.description}</p>
