@@ -7,14 +7,22 @@ const FeaturedCuts = ({ cutsRef }) => {
   const scrollContainerRef = useRef(null);
   const [scrollPercentage, setScrollPercentage] = useState(0);
   const [featuredCuts, setFeaturedCuts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedCuts = localStorage.getItem('cuts');
-    if (storedCuts) {
-      const cuts = JSON.parse(storedCuts);
-      const specialtyCuts = cuts.filter(cut => cut.specialty); // Filter for specialty cuts
-      setFeaturedCuts(specialtyCuts);
-    }
+    const checkForCuts = () => {
+      const storedCuts = localStorage.getItem('cuts');
+      if (storedCuts) {
+        const cuts = JSON.parse(storedCuts);
+        const specialtyCuts = cuts.filter(cut => cut.specialty);
+        setFeaturedCuts(specialtyCuts);
+        setIsLoading(false);
+      } else {
+        setTimeout(checkForCuts, 500);
+      }
+    };
+
+    checkForCuts();
   }, []);
 
   {/* Handles left/right Scroll */}
@@ -61,35 +69,42 @@ const FeaturedCuts = ({ cutsRef }) => {
 
         {/* Scroll Container */}
         <div className="relative">
-          <ScrollChevron direction="left" onClick={() => scroll('left')} />
-          <ScrollChevron direction="right" onClick={() => scroll('right')} />
+          {isLoading ? (
+            <div className="text-center text-white">Loading featured cuts...</div>
+          ) : featuredCuts.length > 0 ? (
+            <>
+              <ScrollChevron direction="left" onClick={() => scroll('left')} />
+              <ScrollChevron direction="right" onClick={() => scroll('right')} />
 
-          {/* Scrollable Content */}
-          <div
-            ref={scrollContainerRef}
-            className="overflow-x-auto scrollbar-hide flex gap-6 px-4 py-4"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {featuredCuts.map((cut) => (
-              <FeaturedCutCard
-                key={cut._id} // Assuming _id is used as the unique identifier
-                image={cut.picture} // Assuming picture is the correct field for the image
-                title={cut.name} // Assuming name is the correct field for the title
-                price={cut.price} // Assuming price is available in the cut object
-                time={cut.time} // Assuming time is available in the cut object
-                summary={cut.description} // Assuming description is the correct field for the summary
-              />
-            ))}
-          </div>
+              {/* Scrollable Content */}
+              <div
+                ref={scrollContainerRef}
+                className="overflow-x-auto scrollbar-hide flex gap-6 px-4 py-4"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {featuredCuts.map((cut) => (
+                  <FeaturedCutCard
+                    key={cut._id} // Assuming _id is used as the unique identifier
+                    image={cut.picture} // Assuming picture is the correct field for the image
+                    title={cut.name} // Assuming name is the correct field for the title
+                    price={cut.price} // Assuming price is available in the cut object
+                    time={cut.time} // Assuming time is available in the cut object
+                    summary={cut.description} // Assuming description is the correct field for the summary
+                  />
+                ))}
+              </div>
 
-          {/* Continuous Scroll Indicator */}
-          <div className="mt-4 h-1 bg-gray-200 rounded-full">
-            <div
-              className="h-full bg-blue-500 rounded-full transition-all duration-300"
-              style={{ width: `${scrollPercentage}%` }}
-            />
-          </div>
-
+              {/* Continuous Scroll Indicator */}
+              <div className="mt-4 h-1 bg-gray-200 rounded-full">
+                <div
+                  className="h-full bg-blue-500 rounded-full transition-all duration-300"
+                  style={{ width: `${scrollPercentage}%` }}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="text-center text-white">No featured cuts available</div>
+          )}
         </div>
       </div>
     </div>

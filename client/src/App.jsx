@@ -36,6 +36,8 @@ const App = () => {
     };
 
     fetchCuts();
+    
+  
   }, []);
 
   return (

@@ -31,9 +31,9 @@ const ServiceSelection = ({ onServiceSelect }) => {
             case 'popular':
                 return service.popular;
             case 'quick':
-                return service.duration <= 30;
+                return service.time <= 30;
             case 'specialty':
-                return service.category === 'specialty';
+                return service.specialty;
             default:
                 return true;
         }
@@ -99,7 +99,10 @@ const ServiceSelection = ({ onServiceSelect }) => {
                             </div>
                             <p className="text-gray-400">{service.description}</p>
                             <div className="flex justify-between items-center text-gray-300">
-                                <span>{service.duration} mins</span>
+                                <div className="flex items-center">
+                                    <Clock className="w-4 h-4 mr-1" />
+                                    <span>{service.time} mins</span>
+                                </div>
                                 <span>${service.price}</span>
                             </div>
                             <button
