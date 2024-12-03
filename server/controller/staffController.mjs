@@ -85,7 +85,7 @@ export const editStaffById = async (req, res) => {
   const staffUpdates = req.body;
 
   const salt = await bcrypt.genSalt(10);
-  staffUpdates.password = await bcrypt.hash(updates.password, salt);
+  staffUpdates.password = await bcrypt.hash(staffUpdates.password, salt);
 
   const updatedStaff = await User.findByIdAndUpdate(
     id,
@@ -101,6 +101,6 @@ export const editStaffById = async (req, res) => {
 
   res.json(updatedStaff);
   }catch (error) {
-    res.status(400).json({ message: 'Error updating staff', error: error.message });
+    res.status(500).json({ message: 'Error updating staff', error: error.message });
   }
 }
