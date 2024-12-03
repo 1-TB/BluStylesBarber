@@ -1,5 +1,6 @@
 import React from 'react';
 import { Scissors, Zap } from 'lucide-react';
+import { motion } from "framer-motion";
 
 const services = [
   {

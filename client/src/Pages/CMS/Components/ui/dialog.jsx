@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {forwardRef} from 'react';
 
 export function Dialog({ open, onOpenChange, children }) {
   if (!open) return null;
@@ -13,9 +13,10 @@ export function Dialog({ open, onOpenChange, children }) {
   );
 }
 
-export function DialogContent({ className = '', children, ...props }) {
+export const DialogContent = forwardRef(({ className = '', children, ...props }, ref) => {
   return (
     <div
+      ref={ref}
       className={`
         bg-white rounded-lg shadow-lg p-6 w-full max-h-[90vh] overflow-y-auto
         animate-in fade-in duration-200
@@ -26,7 +27,7 @@ export function DialogContent({ className = '', children, ...props }) {
       {children}
     </div>
   );
-}
+});
 
 export function DialogHeader({ className = '', ...props }) {
   return (
