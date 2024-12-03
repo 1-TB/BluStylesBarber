@@ -39,6 +39,9 @@ yarn.lock
 .classpath
 .settings/
 
+#IDE VSCode
+.vscode
+
 # Logs
 logs
 *.log
