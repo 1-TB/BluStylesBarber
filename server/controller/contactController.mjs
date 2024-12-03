@@ -49,6 +49,38 @@ export const createContact = async (req, res) => {
   }
 };
 
+export const replyToContact = async (req, res) => {
+  try {
+    const { email, message } = req.body;
+    const contact = await Contact.findById(req.params.id);
+    
+    if (!contact) {
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Response to Your Contact Request',
+      html: `
+        <h2>Response to Your Message</h2>
+        <p>${message}</p>
+        <br>
+        <p>Original message:</p>
+        <p>${contact.message}</p>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    await Contact.findByIdAndUpdate(req.params.id, { status: 'responded' });
+
+    res.json({ message: 'Reply sent successfully' });
+  } catch (error) {
+    console.error('Error sending reply:', error);
+    res.status(500).json({ message: 'Failed to send reply' });
+  }
+};
+
 // Get Contacts
 export const getContacts = async (req, res) => {
   try {

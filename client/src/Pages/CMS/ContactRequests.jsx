@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Search, Filter } from 'lucide-react';
 import { Button } from './Components/ui/button';
 import ContactRequestCard from './Components/ContactRequestCard';
@@ -13,12 +13,9 @@ const ContactRequests = () => {
     const [contacts, setContacts] = useState([]);
     const { user } = useAuth();
 
-    // Fetch contacts on component mount
-    useEffect(() => {
-        fetchContacts();
-    }, []);
-
-    const fetchContacts = async () => {
+    const fetchContacts = useCallback(async () => {
+        if (!user?.token) return;
+        
         try {
             const response = await fetch('/api/contact', {
                 headers: {
@@ -40,7 +37,11 @@ const ContactRequests = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [user?.token]);
+
+    useEffect(() => {
+        fetchContacts();
+    }, [fetchContacts]);
 
     // mark as read
     const handleMarkAsRead = async (contactId) => {
@@ -116,26 +117,24 @@ const ContactRequests = () => {
 
     // Handle reply submission
     const handleSendReply = async (replyMessage) => {
-        try {
-            const response = await fetch(`/api/contact/${selectedContact._id}/reply`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
-                },
-                body: JSON.stringify({
-                    email: selectedContact.email,
-                    message: replyMessage
-                })
-            });
-
-            if (!response.ok) throw new Error('Failed to send reply');
-
-            handleStatusChange(selectedContact._id, 'responded');
-            setIsReplyModalOpen(false);
-        } catch (error) {
-            console.error('Error sending reply:', error);
+        const response = await fetch(`/api/contact/${selectedContact._id}/reply`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.token}`
+            },
+            body: JSON.stringify({
+                email: selectedContact.email,
+                message: replyMessage
+            })
+        });
+    
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to send reply');
         }
+    
+        await handleStatusChange(selectedContact._id, 'responded');
     };
 
     return (

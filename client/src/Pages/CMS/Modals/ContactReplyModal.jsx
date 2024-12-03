@@ -10,17 +10,28 @@ const ContactReplyModal = ({
     onSendReply
 }) => {
     const [replyMessage, setReplyMessage] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (isOpen) {
             setReplyMessage('');
+            setIsSubmitting(false);
         }
     }, [isOpen]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSendReply(replyMessage);
-        setReplyMessage('');
+        if (!replyMessage.trim() || isSubmitting) return;
+
+        try {
+            setIsSubmitting(true);
+            await onSendReply(replyMessage);
+            onClose();
+        } catch (error) {
+            alert('Failed to send reply: ' + error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     if (!isOpen || !contact) return null;
@@ -71,6 +82,7 @@ const ContactReplyModal = ({
                             value={replyMessage}
                             onChange={(e) => setReplyMessage(e.target.value)}
                             required
+                            disabled={isSubmitting}
                         />
                     </div>
 
@@ -80,15 +92,16 @@ const ContactReplyModal = ({
                             className="text-gray-900"
                             variant="outline"
                             onClick={onClose}
+                            disabled={isSubmitting}
                         >
                             Cancel
                         </Button>
                         <Button
                             type="submit"
                             className="bg-indigo-600 hover:bg-indigo-700 text-white"
-                            disabled={!replyMessage.trim()}
+                            disabled={!replyMessage.trim() || isSubmitting}
                         >
-                            Send Reply
+                            {isSubmitting ? 'Sending...' : 'Send Reply'}
                         </Button>
                     </div>
                 </form>
