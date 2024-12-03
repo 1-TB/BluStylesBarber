@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, Users, Calendar, MessageSquare, Key, LogOut, CircleUserRound  } from "lucide-react";
+import { Menu, Users, Calendar, MessageSquare, Key, LogOut, CircleUserRound, Scissors } from "lucide-react";
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
 import DropdownMenu from './ui/DropdownMenu';
