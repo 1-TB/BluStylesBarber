@@ -1,4 +1,4 @@
-import e from 'express';
+import express from 'express';
 import User from '../models/userSchema.mjs';
 import validateEmail from '../utils/validateEmail.mjs';
 import bcrypt from "bcryptjs";
@@ -64,7 +64,7 @@ export const deleteStaffbyId = async (req, res) => {
     if (!deleteStaff) {
      res.status(404).json({ message: 'Unable to find Staff.'})
      return;
-    }
+    } 
 
     return res.status(200).json({
       message: 'Staff deleted successfully',
@@ -81,6 +81,7 @@ export const deleteStaffbyId = async (req, res) => {
 export const editStaffById = async (req, res) => {
   try {
   const {id} = req.params;
+  console.log(id)
   const staffUpdates = req.body;
 
   const salt = await bcrypt.genSalt(10);

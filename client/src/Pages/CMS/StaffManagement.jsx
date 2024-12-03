@@ -39,6 +39,11 @@ const StaffManagement = () => {
      setOpenStaffModel(true);
    };
 
+   const handleAddStaff = () => {
+    setEditStaffData(null)
+    setOpenStaffModel(true)
+   }
+
    // Delete Staff Function
    const handleDeleteStaff = async (staff) => {
      try {
@@ -78,7 +83,7 @@ const StaffManagement = () => {
              <div className="flex flex-row items-center gap-2 w-full justify-center  sm:w-auto">
                <button
                  className="bg-indigo-900 text-white px-4 py-2 rounded-md flex items-center gap-2 w-full sm:w-auto justify-center max-w-36 transition-opacity hover:opacity-80"
-                 onClick={() => setOpenStaffModel(true)}
+                 onClick={() => handleAddStaff()}
                >
                  <UserPlus /> Add Staff
                </button>

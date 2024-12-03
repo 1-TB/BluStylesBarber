@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -9,8 +9,10 @@ import { Alert, AlertDescription } from "../Components/ui/alert";
 import { Input } from "../Components/ui/input";
 import { Button } from "../Components/ui/button";
 import { useAuth } from "../AuthContext";
+import imageCompression from 'browser-image-compression'; 
 
 const AddStaffModal = ({ isOpen, onClose, initialData = null, onSuccessfulSubmit }) => {
+  const modalRef = useRef(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -27,6 +29,12 @@ const AddStaffModal = ({ isOpen, onClose, initialData = null, onSuccessfulSubmit
 
   // Update form when initialData changes
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        handleClose();
+      }
+    };
+
     if (initialData) {
       setFormData({
         ...initialData,
@@ -37,8 +45,18 @@ const AddStaffModal = ({ isOpen, onClose, initialData = null, onSuccessfulSubmit
       // Reset form when modal is opened without initial data
       resetForm();
     }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    // Cleanup
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, [initialData, isOpen]);
 
+  //Conver image into a base64
   const base64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -48,14 +66,43 @@ const AddStaffModal = ({ isOpen, onClose, initialData = null, onSuccessfulSubmit
     });
   };
 
+  //Compress image just incase if user sumbits a large photo
+  const compressImage = async (file) => {
+    const options = {
+      maxSizeMB: 1,             // Maximum size in MB
+      maxWidthOrHeight: 320,    // Match your required width
+      useWebWorker: true,
+      initialQuality: 0.8,
+      width: 320,              // Force exact width
+      height: 300              // Force exact height
+    };
+  
+    try {
+      const compressedFile = await imageCompression(file, options);
+      const base64String = await base64(compressedFile);
+      return base64String;
+    } catch (error) {
+      console.error('Error compressing image:', error);
+      throw error;
+    }
+  };
+
+  
+  //If user changes image
   const handlePhotoChange = async (e) => {
-    const file = e.target.files[0];
-    const base64Image = await base64(file);
-    setSelectedPhoto(base64Image);
-    setFormData((prev) => ({
-      ...prev,
-      image: base64Image
-    }));
+    try {
+      const file = e.target.files[0];
+
+      // Compress the image before converting to base64
+      const compressedBase64  = await compressImage(file);
+      setSelectedPhoto(compressedBase64);
+      setFormData((prev) => ({
+        ...prev,
+        image: compressedBase64
+      }));
+    } catch (error) {
+      setError('Error processing image. Please try again.')
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -70,10 +117,10 @@ const AddStaffModal = ({ isOpen, onClose, initialData = null, onSuccessfulSubmit
     }
 
     try {
-      const url = initialData 
+      const url = initialData != null 
         ? `/api/staff/${initialData._id}` 
         : "/api/staff";
-      const method = initialData ? 'PUT' : 'POST';
+      const method = initialData != null ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method: method,
@@ -86,9 +133,7 @@ const AddStaffModal = ({ isOpen, onClose, initialData = null, onSuccessfulSubmit
 
       const data = await response.json();
       console.log(data);
-      if (response.ok && onSuccessfulSubmit) {
-        onSuccessfulSubmit();
-      }
+      onSuccessfulSubmit()
       handleClose();
     } catch (err) {
       console.error('Error uploading staff:', err);
@@ -122,13 +167,14 @@ const AddStaffModal = ({ isOpen, onClose, initialData = null, onSuccessfulSubmit
   };
 
   const handleClose = () => {
+    initialData = null;
     resetForm();
     onClose();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent>
+      <DialogContent ref={modalRef}>
         <DialogTitle className="mb-4">
           {initialData ? "Edit Staff Member" : "Add New Staff Member"}
         </DialogTitle>

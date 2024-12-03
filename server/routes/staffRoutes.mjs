@@ -1,6 +1,5 @@
 import express from 'express'
 import {authenticateToken, isAdmin} from '../middleware/authenticateToken.mjs'
-
 import {
   postStaff,
   getAllStaff,
