@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from './Components/ui/button';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, ArrowUp, ArrowDown, Check } from 'lucide-react';
+import DropdownMenu from './Components/ui/DropdownMenu';
 import BookingCard from './Components/BookingCard';
 import EditBookingModal from './Modals/EditBookingModal';
 import { useAuth } from './AuthContext';
@@ -11,29 +12,95 @@ const Bookings = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedBooking, setSelectedBooking] = useState(null);
     const [bookings, setBookings] = useState([]);
+    const [statusFilter, setStatusFilter] = useState('all');
+    const [dateSort, setDateSort] = useState('newest');
     const { user } = useAuth();
 
-    // Fetch bookings on component mount
+    const statusFilterItems = [
+        {
+            label: 'All Bookings',
+            onClick: () => setStatusFilter('all'),
+            icon: statusFilter === 'all' ? <Check className="h-4 w-4" /> : null
+        },
+        {
+            label: 'Pending',
+            onClick: () => setStatusFilter('pending'),
+            icon: statusFilter === 'pending' ? <Check className="h-4 w-4" /> : null
+        },
+        {
+            label: 'Confirmed',
+            onClick: () => setStatusFilter('confirmed'),
+            icon: statusFilter === 'confirmed' ? <Check className="h-4 w-4" /> : null
+        }
+    ];
+
+    const dateSortItems = [
+        {
+            label: 'Newest First',
+            onClick: () => setDateSort('newest'),
+            icon: dateSort === 'newest' ? <Check className="h-4 w-4" /> : null
+        },
+        {
+            label: 'Oldest First',
+            onClick: () => setDateSort('oldest'),
+            icon: dateSort === 'oldest' ? <Check className="h-4 w-4" /> : null
+        }
+    ];
+
     useEffect(() => {
         fetchBookings();
-    }, []);
+    }, [statusFilter]);
 
     const fetchBookings = async () => {
         try {
-            const response = await fetch('/api/bookings', {
+            const queryParams = new URLSearchParams();
+            if (statusFilter !== 'all') {
+                queryParams.append('status', statusFilter);
+            }
+
+            const response = await fetch(`/api/bookings?${queryParams.toString()}`, {
                 headers: {
                     'Authorization': `Bearer ${user.token}`
                 }
             });
+
             if (!response.ok) throw new Error('Failed to fetch bookings');
             const data = await response.json();
-            setBookings(data);
+
+            const sortedData = [...data].sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                return dateSort === 'newest' ? dateB - dateA : dateA - dateB;
+            });
+
+            setBookings(sortedData);
         } catch (error) {
             console.error('Error fetching bookings:', error);
         } finally {
             setIsLoading(false);
         }
     };
+
+    const filteredBookings = () => {
+        if (!searchQuery) return bookings;
+
+        return bookings.filter(booking =>
+            booking.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            booking.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            booking.phone?.includes(searchQuery)
+        );
+    };
+
+    useEffect(() => {
+        setBookings(prevBookings => {
+            const sorted = [...prevBookings].sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                return dateSort === 'newest' ? dateB - dateA : dateA - dateB;
+            });
+            return sorted;
+        });
+    }, [dateSort]);
 
     // Handle confirm
     const handleConfirmBooking = async (bookingId) => {
@@ -48,7 +115,7 @@ const Bookings = () => {
             });
 
             if (!response.ok) throw new Error('Failed to confirm booking');
-            
+
             setBookings(prevBookings =>
                 prevBookings.map(booking =>
                     booking._id === bookingId
@@ -89,6 +156,7 @@ const Bookings = () => {
 
     // Handle save edit
     const handleSaveBooking = async (updatedBooking) => {
+        console.log('handleSaveBooking - Starting with data:', updatedBooking);
         try {
             const response = await fetch(`/api/bookings/${updatedBooking._id}`, {
                 method: 'PUT',
@@ -98,19 +166,24 @@ const Bookings = () => {
                 },
                 body: JSON.stringify(updatedBooking)
             });
-
-            if (!response.ok) throw new Error('Failed to update booking');
-
-            setBookings(prevBookings =>
-                prevBookings.map(booking =>
-                    booking._id === updatedBooking._id
-                        ? { ...updatedBooking, updatedAt: new Date().toISOString() }
-                        : booking
-                )
-            );
+    
+            console.log('handleSaveBooking - Response status:', response.status);
+            const responseData = await response.json();
+            console.log('handleSaveBooking - Response data:', responseData);
+    
+            if (!response.ok) {
+                throw new Error('Failed to update booking');
+            }
+    
+            // Close modal
             setIsEditModalOpen(false);
+            
+            console.log('handleSaveBooking - About to fetch bookings');
+            await fetchBookings();
+            console.log('handleSaveBooking - Fetch bookings completed');
+    
         } catch (error) {
-            console.error('Error updating booking:', error);
+            console.error('handleSaveBooking - Error:', error);
         }
     };
 
@@ -147,7 +220,6 @@ const Bookings = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Main Content */}
             <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 md:pt-24 pb-6 md:pb-8">
                 {/* Search and Filter Section */}
                 <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 md:mb-6">
@@ -162,19 +234,36 @@ const Bookings = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <Button
-                            variant="outline"
-                            className="flex items-center gap-2 text-indigo-800"
-                        >
-                            <Filter className="h-4 w-4 text-indigo-800" />
-                            Filter
-                        </Button>
+                        <div className="flex gap-2">
+                            <DropdownMenu
+                                items={statusFilterItems}
+                                trigger={
+                                    <Button variant="outline" className="flex items-center gap-2">
+                                        <Filter className="h-4 w-4" />
+                                        Status
+                                    </Button>
+                                }
+                            />
+
+                            <DropdownMenu
+                                items={dateSortItems}
+                                trigger={
+                                    <Button variant="outline" className="flex items-center gap-2">
+                                        {dateSort === 'newest' ?
+                                            <ArrowDown className="h-4 w-4" /> :
+                                            <ArrowUp className="h-4 w-4" />
+                                        }
+                                        Date
+                                    </Button>
+                                }
+                            />
+                        </div>
                     </div>
                 </div>
 
                 {/* Bookings List */}
                 <div className="space-y-4">
-                    {bookings.map((booking) => (
+                    {filteredBookings().map((booking) => (
                         <BookingCard
                             key={booking._id}
                             booking={booking}

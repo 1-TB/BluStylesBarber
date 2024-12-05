@@ -45,11 +45,17 @@ const EditBookingModal = ({
 
   useEffect(() => {
     if (booking) {
-      // Format the date from dd-mm-yyyy to yyyy-mm-dd for the date input
+      // Handle date formatting
       const formatDate = (dateStr) => {
         if (!dateStr) return '';
-        const [day, month, year] = dateStr.split('-');
-        return `${year}-${month}-${day}`;
+        try {
+          const date = new Date(dateStr);
+          // Returns YYYY-MM-DD
+          return date.toISOString().split('T')[0];
+        } catch (error) {
+          console.error('Date formatting error:', error);
+          return '';
+        }
       };
 
       setFormData({
@@ -93,21 +99,31 @@ const EditBookingModal = ({
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Format the date back to dd-mm-yyyy before savie
-    const formatDateForSubmit = (dateStr) => {
-      if (!dateStr) return '';
-      const [year, month, day] = dateStr.split('-');
-      return `${day}-${month}-${year}`;
-    };
+    
+    try {
+        const dateObj = new Date(formData.date);
+        const submissionData = {
+            ...formData,
+            _id: booking._id,
+            status: booking.status,
+            date: dateObj.toISOString(),
+            service: {
+                name: formData.service.name,
+                duration: Number(formData.service.duration),
+                price: Number(formData.service.price)
+            }
+        };
 
-    const submissionData = {
-      ...formData,
-      date: formatDateForSubmit(formData.date)
-    };
-    onSave(submissionData);
-  };
+        console.log('EditModal - Submitting data:', submissionData);
+        await onSave(submissionData);
+        console.log('EditModal - Save completed');
+        onClose();
+    } catch (error) {
+        console.error('EditModal - Error:', error);
+    }
+};
 
   if (!isOpen) return null;
 

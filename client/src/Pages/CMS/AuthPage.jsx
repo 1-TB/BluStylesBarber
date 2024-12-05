@@ -237,14 +237,14 @@ export const AuthPage = () => {
                 <Button
                   variant="link"
                   onClick={() => setMode('forgot')}
-                  className="text-sm text-indigo-600 hover:text-indigo-700"
+                  className="text-sm text-indigo-600 hover:text-gray-200"
                 >
                   Forgot your password?
                 </Button>
                 <Button
                   variant="link"
                   onClick={() => setMode('register')}
-                  className="text-sm text-gray-600 hover:text-gray-700"
+                  className="text-sm text-gray-600 hover:text-gray-200"
                 >
                   Don't have an account? Sign up
                 </Button>

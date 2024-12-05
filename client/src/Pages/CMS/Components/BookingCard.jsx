@@ -19,6 +19,42 @@ const BookingCard = ({
     onDelete,
     onStatusChange,
 }) => {
+    // Format date
+    const formatDate = (dateString) => {
+        try {
+            const date = new Date(dateString.split('T')[0]);
+            return date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        } catch (error) {
+            console.error('Date formatting error:', error);
+            return dateString;
+        }
+    };
+
+    // Format time
+    const formatTime = (timeString) => {
+        try {
+            const [hours, minutes] = timeString.split(':');
+            const date = new Date();
+            date.setHours(parseInt(hours), parseInt(minutes));
+
+            return date.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        } catch (error) {
+            console.error('Time formatting error:', error);
+            return timeString;
+        }
+    };
+
+
+    //dropdown
     const dropdownItems = [
         {
             label: 'Confirm',
@@ -89,11 +125,11 @@ const BookingCard = ({
                 <div className="space-y-2">
                     <div className="flex items-center text-gray-600">
                         <Calendar className="h-4 w-4 mr-2" />
-                        {booking.date}
+                        {formatDate(booking.date)}
                     </div>
                     <div className="flex items-center text-gray-600">
                         <Clock className="h-4 w-4 mr-2" />
-                        {booking.time}
+                        {formatTime(booking.time)}
                     </div>
                 </div>
             </div>
