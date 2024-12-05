@@ -7,7 +7,7 @@ import validatePhone from "../utils/validatePhone.mjs";
 export const postClient = async (req, res) => {
   try {
     const { name, phone, email, lastVisit, nextVisit } = req.body;
-    
+
     if (!name || !phone || !email) {
       return res.status(400).json({ message: 'Required fields missing' });
     }
@@ -38,18 +38,37 @@ export const postClient = async (req, res) => {
 
 export const getClient = async (req, res) => {
   try {
-    const { search } = req.query;
+    const { search, visitType, dateFrom, dateTo } = req.query;
     let query = {};
-    
+
+    // Search query
     if (search) {
-      query = {
-        $or: [
-          { name: { $regex: search, $options: 'i' } },
-          { email: { $regex: search, $options: 'i' } }
-        ]
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { phone: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    // Date filters
+    if (visitType && dateFrom) {
+      const dateField = visitType === 'last' ? 'lastVisit' : 'nextVisit';
+
+      const startDate = new Date(dateFrom);
+      startDate.setHours(0, 0, 0, 0);
+
+      const endDate = dateTo ? new Date(dateTo) : new Date(dateFrom);
+      endDate.setHours(0, 0, 0, 0);
+
+      startDate.setDate(startDate.getDate() + 1);
+      endDate.setDate(endDate.getDate() + 2);
+      
+      query[dateField] = {
+        $gte: startDate,
+        $lt: endDate
       };
     }
-    
+
     const clients = await Client.find(query);
     res.json(clients);
   } catch (error) {
@@ -58,10 +77,11 @@ export const getClient = async (req, res) => {
   }
 };
 
+
 export const putClient = async (req, res) => {
   try {
     const { name, phone, email, lastVisit, nextVisit } = req.body;
-    
+
     if (!validateEmail(email)) {
       return res.status(400).json({ message: 'Invalid email format' });
     }
@@ -96,7 +116,7 @@ export const putClient = async (req, res) => {
 export const deletedClient = async (req, res) => {
   try {
     const deletedClient = await Client.findByIdAndDelete(req.params.id);
-    
+
     if (!deletedClient) {
       return res.status(404).json({ message: 'Client not found' });
     }

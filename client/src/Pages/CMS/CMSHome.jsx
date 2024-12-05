@@ -7,7 +7,7 @@ import LoadingOverlay from './Components/LoadingOverlay';
 import EditClientModal from './Modals/EditClientModal';
 import ClientInfoModal from './Modals/ClientInfoModal';
 import AddClientModal from './Modals/AddClientModal';
-import { Button } from './Components/ui/button';
+import ClientFilters from './Components/VisitDateFilter';
 import { Alert, AlertDescription } from './Components/ui/alert';
 import ChangePasswordModal from "./Modals/PasswordChangeModel";
 
@@ -24,6 +24,12 @@ const CMSHome = () => {
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
     const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
+
+    const [dateFilters, setDateFilters] = useState({
+        visitType: '',
+        dateFrom: '',
+        dateTo: ''
+      });
 
     const { user, logout } = useAuth();
     const navigate = useNavigate();
@@ -42,7 +48,22 @@ const CMSHome = () => {
     const fetchClients = async (search = '') => {
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/clients${search ? `?search=${search}` : ''}`, {
+            const queryParams = new URLSearchParams();
+            if (search) queryParams.append('search', search);
+            
+            if (dateFilters.visitType && dateFilters.dateFrom) {
+                queryParams.append('visitType', dateFilters.visitType);
+                const fromDate = new Date(dateFilters.dateFrom).toISOString().split('T')[0];
+                queryParams.append('dateFrom', fromDate);
+                
+                if (dateFilters.dateTo) {
+                  const toDate = new Date(dateFilters.dateTo).toISOString().split('T')[0];
+                  queryParams.append('dateTo', toDate);
+                }
+              }
+
+
+              const response = await fetch(`/api/clients?${queryParams.toString()}`, {
                 headers: {
                     'Authorization': `Bearer ${user.token}`
                 }
@@ -80,7 +101,20 @@ const CMSHome = () => {
         }, 300);
 
         return () => clearTimeout(delayDebounce);
-    }, [searchQuery]);
+    }, [searchQuery, dateFilters]);
+
+    // Date filter
+    const handleFilterChange = (filterName, value) => {
+        console.log('Filter changed:', filterName, value);
+        setDateFilters(prev => {
+          const newFilters = {
+            ...prev,
+            [filterName]: value
+          };
+          console.log('New date filters:', newFilters);
+          return newFilters;
+        });
+      };
 
     // Add Client
     const handleAddClient = async (newClient) => {
@@ -256,6 +290,7 @@ const CMSHome = () => {
                         setSearchQuery={setSearchQuery}
                         onAddClick={() => setIsAddModalOpen(true)}
                     />
+                    <ClientFilters onFilterChange={handleFilterChange} />
                 </div>
 
                 {/* Table Section */}

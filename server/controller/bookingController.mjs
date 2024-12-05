@@ -98,18 +98,18 @@ export const getBookings = async (req, res) => {
   try {
     const { startDate, endDate, status } = req.query;
     let query = {};
-    
+
     if (startDate && endDate) {
       query.date = {
         $gte: new Date(startDate),
         $lte: new Date(endDate)
       };
     }
-    
+
     if (status) {
       query.status = status;
     }
-    
+
     const bookings = await Booking.find(query).sort({ date: 1, time: 1 });
     res.json(bookings);
   } catch (error) {
@@ -121,45 +121,55 @@ export const getBookings = async (req, res) => {
 // Update booking status (admin only)
 export const updateBooking = async (req, res) => {
   try {
-    const { status } = req.body;
-    const booking = await Booking.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true }
-    );
+    const updateData = { ...req.body };
+    const previousBooking = await Booking.findById(req.params.id);
 
-    if (!booking) {
+    if (!previousBooking) {
       return res.status(404).json({ message: 'Booking not found' });
     }
 
-    // Send status update email to customer if status changed
-    if (status) {
-      const emailContent = {
-        confirmed: {
-          subject: 'Booking Confirmed - Blu Styles Barbershop',
-          html: `
-            <h2>Your booking has been confirmed!</h2>
-            <p>We're looking forward to seeing you on ${booking.date.toLocaleDateString()} at ${booking.time}.</p>
-            <p>Service: ${booking.service.name}</p>
-          `
-        },
-        cancelled: {
-          subject: 'Booking Cancelled - Blu Styles Barbershop',
-          html: `
-            <h2>Your booking has been cancelled</h2>
-            <p>If you didn't request this cancellation, please contact us immediately.</p>
-            <p>Original appointment: ${booking.date.toLocaleDateString()} at ${booking.time}</p>
-          `
-        }
-      };
+    // Update the booking
+    const booking = await Booking.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateData },
+      { new: true }
+    );
 
-      if (emailContent[status]) {
+    // Check if status has changed
+    const statusChanged = updateData.status && previousBooking.status !== updateData.status;
+
+    // Send email only if status has changed ot confirmed or cancelled
+    if (statusChanged && ['confirmed', 'cancelled'].includes(updateData.status)) {
+      try {
+        const emailContent = {
+          confirmed: {
+            subject: 'Booking Confirmed - Blu Styles Barbershop',
+            html: `
+              <h2>Your booking has been confirmed!</h2>
+              <p>We're looking forward to seeing you on ${booking.date.toLocaleDateString()} at ${booking.time}.</p>
+              <p>Service: ${booking.service.name}</p>
+            `
+          },
+          cancelled: {
+            subject: 'Booking Cancelled - Blu Styles Barbershop',
+            html: `
+              <h2>Your booking has been cancelled</h2>
+              <p>If you didn't request this cancellation, please contact us immediately.</p>
+              <p>Original appointment: ${booking.date.toLocaleDateString()} at ${booking.time}</p>
+            `
+          }
+        };
+
         await transporter.sendMail({
           from: process.env.EMAIL_USER,
           to: booking.email,
-          subject: emailContent[status].subject,
-          html: emailContent[status].html
+          subject: emailContent[updateData.status].subject,
+          html: emailContent[updateData.status].html
+        }).catch(emailError => {
+          console.error('Failed to send email notification:', emailError);
         });
+      } catch (emailError) {
+        console.error('Failed to process email notification:', emailError);
       }
     }
 
@@ -173,7 +183,7 @@ export const updateBooking = async (req, res) => {
 export const deleteBooking = async (req, res) => {
   try {
     const booking = await Booking.findByIdAndDelete(req.params.id);
-    
+
     if (!booking) {
       return res.status(404).json({ message: 'Booking not found' });
     }

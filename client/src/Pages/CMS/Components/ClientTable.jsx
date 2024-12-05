@@ -1,15 +1,25 @@
 import { MoreVertical, Info, Edit, History, Trash2 } from 'lucide-react';
 import DropdownMenu from './ui/DropdownMenu';
 
-const ClientTable = ({ 
-    clients, 
-    onInfoClick, 
-    onEditClick, 
-    onVisitHistoryClick, 
-    onDeleteClick, 
+const ClientTable = ({
+    clients,
+    onInfoClick,
+    onEditClick,
+    onVisitHistoryClick,
+    onDeleteClick,
     isLoading,
-    isMobileView 
+    isMobileView
 }) => {
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+        });
+    };
+
     const dropdownItems = (client) => [
         {
             label: 'Client Info',
@@ -45,7 +55,7 @@ const ClientTable = ({
                         <div key={index} className="border-b border-gray-200 p-4">
                             <div className="flex justify-between items-start mb-2">
                                 <div className="font-semibold text-indigo-900">{client.name}</div>
-                                <DropdownMenu 
+                                <DropdownMenu
                                     items={dropdownItems(client)}
                                     align="right"
                                     disabled={isLoading}
@@ -65,13 +75,13 @@ const ClientTable = ({
                                 {client.lastVisit && (
                                     <div className="flex justify-between">
                                         <span className="text-gray-500">Last Visit:</span>
-                                        <span className="text-indigo-900">{client.lastVisit}</span>
+                                        <span className="text-indigo-900">{formatDate(client.lastVisit)}</span>
                                     </div>
                                 )}
                                 {client.nextVisit && (
                                     <div className="flex justify-between">
                                         <span className="text-gray-500">Next Visit:</span>
-                                        <span className="text-indigo-900">{client.nextVisit}</span>
+                                        <span className="text-indigo-900">{formatDate(client.nextVisit)}</span>
                                     </div>
                                 )}
                             </div>
@@ -114,11 +124,11 @@ const ClientTable = ({
                                 <td className="px-6 py-4 text-sm text-indigo-900">{client.name}</td>
                                 <td className="px-6 py-4 text-sm text-indigo-900">{client.phone}</td>
                                 <td className="px-6 py-4 text-sm text-indigo-900">{client.email}</td>
-                                <td className="px-6 py-4 text-sm text-indigo-900">{client.lastVisit}</td>
-                                <td className="px-6 py-4 text-sm text-indigo-900">{client.nextVisit}</td>
+                                <td className="px-6 py-4 text-sm text-indigo-900">{formatDate(client.lastVisit)}</td>
+                                <td className="px-6 py-4 text-sm text-indigo-900">{formatDate(client.nextVisit)}</td>
                                 <td className="px-6 py-4 text-right text-sm font-medium">
                                     <div className="flex justify-end">
-                                        <DropdownMenu 
+                                        <DropdownMenu
                                             items={dropdownItems(client)}
                                             align="right"
                                             disabled={isLoading}

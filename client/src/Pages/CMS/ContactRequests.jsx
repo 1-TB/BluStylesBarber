@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, ArrowUp, ArrowDown, Check } from 'lucide-react';
 import { Button } from './Components/ui/button';
+import DropdownMenu from './Components/ui/DropdownMenu';
 import ContactRequestCard from './Components/ContactRequestCard';
 import ContactReplyModal from './Modals/ContactReplyModal';
 import { useAuth } from './AuthContext';
@@ -11,37 +12,95 @@ const ContactRequests = () => {
     const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
     const [selectedContact, setSelectedContact] = useState(null);
     const [contacts, setContacts] = useState([]);
+    const [statusFilter, setStatusFilter] = useState('all');
+    const [dateSort, setDateSort] = useState('newest');
     const { user } = useAuth();
+
+    const statusFilterItems = [
+        {
+            label: 'All Requests',
+            onClick: () => setStatusFilter('all'),
+            icon: statusFilter === 'all' ? <Check className="h-4 w-4" /> : null
+        },
+        {
+            label: 'Unread',
+            onClick: () => setStatusFilter('new'),
+            icon: statusFilter === 'new' ? <Check className="h-4 w-4" /> : null
+        },
+        {
+            label: 'Read',
+            onClick: () => setStatusFilter('read'),
+            icon: statusFilter === 'read' ? <Check className="h-4 w-4" /> : null
+        },
+        {
+            label: 'Responded',
+            onClick: () => setStatusFilter('responded'),
+            icon: statusFilter === 'responded' ? <Check className="h-4 w-4" /> : null
+        }
+    ];
+
+    const dateSortItems = [
+        {
+            label: 'Newest First',
+            onClick: () => setDateSort('newest'),
+            icon: dateSort === 'newest' ? <Check className="h-4 w-4" /> : null
+        },
+        {
+            label: 'Oldest First',
+            onClick: () => setDateSort('oldest'),
+            icon: dateSort === 'oldest' ? <Check className="h-4 w-4" /> : null
+        }
+    ];
 
     const fetchContacts = useCallback(async () => {
         if (!user?.token) return;
-        
+
         try {
-            const response = await fetch('/api/contact', {
+            const queryParams = new URLSearchParams();
+            if (statusFilter !== 'all') {
+                queryParams.append('status', statusFilter);
+            }
+
+            const response = await fetch(`/api/contact?${queryParams.toString()}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${user.token}`
                 }
             });
-            
+
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to fetch contacts');
             }
-            
+
             const data = await response.json();
-            setContacts(Array.isArray(data) ? data : []);
+            const sortedData = [...(Array.isArray(data) ? data : [])].sort((a, b) => {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+                return dateSort === 'newest' ? dateB - dateA : dateA - dateB;
+            });
+            setContacts(sortedData);
         } catch (error) {
             console.error('Error fetching contacts:', error);
             setContacts([]);
         } finally {
             setIsLoading(false);
         }
-    }, [user?.token]);
+    }, [user?.token, statusFilter, dateSort]);
 
     useEffect(() => {
         fetchContacts();
     }, [fetchContacts]);
+
+    const filteredContacts = () => {
+        if (!searchQuery) return contacts;
+
+        return contacts.filter(contact =>
+            contact.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            contact.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            contact.message?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    };
 
     // mark as read
     const handleMarkAsRead = async (contactId) => {
@@ -56,12 +115,7 @@ const ContactRequests = () => {
             });
 
             if (!response.ok) throw new Error('Failed to mark contact as read');
-
-            setContacts(contacts.map(contact =>
-                contact._id === contactId
-                    ? { ...contact, status: 'read' }
-                    : contact
-            ));
+            fetchContacts();
         } catch (error) {
             console.error('Error marking contact as read:', error);
         }
@@ -86,12 +140,7 @@ const ContactRequests = () => {
             });
 
             if (!response.ok) throw new Error('Failed to update contact status');
-
-            setContacts(contacts.map(contact =>
-                contact._id === contactId
-                    ? { ...contact, status: newStatus }
-                    : contact
-            ));
+            fetchContacts();
         } catch (error) {
             console.error('Error updating contact status:', error);
         }
@@ -108,8 +157,7 @@ const ContactRequests = () => {
             });
 
             if (!response.ok) throw new Error('Failed to delete contact');
-
-            setContacts(contacts.filter(contact => contact._id !== contactId));
+            fetchContacts();
         } catch (error) {
             console.error('Error deleting contact:', error);
         }
@@ -117,24 +165,29 @@ const ContactRequests = () => {
 
     // Handle reply submission
     const handleSendReply = async (replyMessage) => {
-        const response = await fetch(`/api/contact/${selectedContact._id}/reply`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.token}`
-            },
-            body: JSON.stringify({
-                email: selectedContact.email,
-                message: replyMessage
-            })
-        });
-    
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Failed to send reply');
+        try {
+            const response = await fetch(`/api/contact/${selectedContact._id}/reply`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                },
+                body: JSON.stringify({
+                    email: selectedContact.email,
+                    message: replyMessage
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Failed to send reply');
+            }
+
+            await handleStatusChange(selectedContact._id, 'responded');
+            setIsReplyModalOpen(false);
+        } catch (error) {
+            console.error('Error sending reply:', error);
         }
-    
-        await handleStatusChange(selectedContact._id, 'responded');
     };
 
     return (
@@ -153,13 +206,30 @@ const ContactRequests = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <Button
-                            variant="outline"
-                            className="flex items-center gap-2 text-indigo-800"
-                        >
-                            <Filter className="h-4 w-4 text-indigo-800" />
-                            Filter
-                        </Button>
+                        <div className="flex gap-2">
+                            <DropdownMenu
+                                items={statusFilterItems}
+                                trigger={
+                                    <Button variant="outline" className="flex items-center gap-2">
+                                        <Filter className="h-4 w-4" />
+                                        Status
+                                    </Button>
+                                }
+                            />
+
+                            <DropdownMenu
+                                items={dateSortItems}
+                                trigger={
+                                    <Button variant="outline" className="flex items-center gap-2">
+                                        {dateSort === 'newest' ?
+                                            <ArrowDown className="h-4 w-4" /> :
+                                            <ArrowUp className="h-4 w-4" />
+                                        }
+                                        Date
+                                    </Button>
+                                }
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -167,10 +237,10 @@ const ContactRequests = () => {
                 <div className="space-y-4">
                     {isLoading ? (
                         <div>Loading...</div>
-                    ) : contacts.length === 0 ? (
+                    ) : filteredContacts().length === 0 ? (
                         <div>No contact requests found</div>
                     ) : (
-                        contacts.map((contact) => (
+                        filteredContacts().map((contact) => (
                             <ContactRequestCard
                                 key={contact._id}
                                 contact={contact}

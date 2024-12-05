@@ -24,9 +24,6 @@ const ClientSearchBar = ({ searchQuery, setSearchQuery, onAddClick }) => {
                         </button>
                     )}
                 </div>
-                <button className="ml-2 p-2 hover:bg-gray-100 rounded-lg">
-                    <Filter className="h-6 w-6 text-indigo-900" />
-                </button>
             </div>
 
             <button

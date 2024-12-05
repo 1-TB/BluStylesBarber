@@ -64,11 +64,10 @@ const ServiceSelection = ({ onServiceSelect }) => {
                     <button
                         key={id}
                         onClick={() => setActiveFilter(id)}
-                        className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 ${
-                            activeFilter === id
+                        className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 ${activeFilter === id
                                 ? 'bg-blue-600 text-white'
                                 : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                        }`}
+                            }`}
                     >
                         <Icon size={18} />
                         <span>{name}</span>
@@ -106,7 +105,11 @@ const ServiceSelection = ({ onServiceSelect }) => {
                                 <span>${service.price}</span>
                             </div>
                             <button
-                                onClick={() => onServiceSelect(service)}
+                                onClick={() => onServiceSelect({
+                                    name: service.name,
+                                    duration: service.time,
+                                    price: service.price
+                                })}
                                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors duration-200"
                             >
                                 Select Service
