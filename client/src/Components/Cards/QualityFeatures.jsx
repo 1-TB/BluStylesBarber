@@ -6,7 +6,7 @@ const iconsData = [
   {
     id: 1,
     title: "Licensed",
-    description: "Our licensed and insured barbers adhere to rigorous cleanliness and sanitation standards, ensuring a safe, professional environment for all clients.",
+    description: "Our licensed and insured barbers ensure a safe and professional environment for all clients.",
     image: ShieldCheck
   },
   {

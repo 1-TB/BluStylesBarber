@@ -32,7 +32,7 @@ const OurStaff = () => {
       } else if (retires < MAX_RETRIES) {
         await fetchStaffData();
         retires++;
-        setTimeout(checkForStaff, 4000); // Retry every 2 seconds
+        setTimeout(checkForStaff, 1000); // Retry every 2 seconds
       } else {
         setIsLoading(false);
       }
