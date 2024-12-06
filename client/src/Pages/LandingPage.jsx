@@ -62,7 +62,7 @@ const LandingPage = () => {
                     className="bg-transparent text-white border border-white/40 px-8 sm:px-12 md:px-16 py-3 md:py-4 uppercase text-base sm:text-lg hover:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                     style={{ fontFamily: "Teko", letterSpacing: "0.1em" }}
                   >
-                    CALL US TODAY
+                    REQUEST A BOOKING TODAY
                   </button>
                 </Link>
               </div>
