@@ -20,7 +20,7 @@ export const StaffProvider = ({ children }) => {
       const request = await response.json();
       setStaffs(request);
     } catch (error) {
-      console.error("Error fetching staff", error);
+      console.log("Error fetching staff", error);
     }
   };
 
@@ -29,7 +29,7 @@ export const StaffProvider = ({ children }) => {
   }, []);
 
   return (
-    <StaffContext.Provider value={[staffs, setStaffs]}>
+    <StaffContext.Provider value={[staffs,setStaffs,fetchStaffData]}>
       {children}
     </StaffContext.Provider>
   )
