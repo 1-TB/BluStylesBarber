@@ -7,7 +7,7 @@ const StaffCard = ({ staffs, handleDeleteStaff, handleEditStaff }) => {
     <div className="flex flex-col sm:flex-row flex-wrap max-w-7xl gap-4 w-full justify-center items-center">
       {staffs && staffs.map((staff, index) => (
         <div 
-          key={staff._id || index} 
+          key={index} 
           className="bg-white rounded-lg shadow-2xl overflow-visible mb-4 w-full max-w-[300px] h-72 mx-auto sm:mx-0"
         >
           <div className="flex flex-col items-center gap-2 mb-10">

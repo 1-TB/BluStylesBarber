@@ -30,6 +30,11 @@ export const createContact = async (req, res) => {
       from: process.env.EMAIL_USER,
       to: 'blustyles0@gmail.com',
       subject: `New Contact Form Submission from ${name}`,
+      attachments: [{
+        filename: 'emailLogo.png',
+        path: './templates/images/emailLogo.png',
+        cid: 'emailLogo'
+      }],
       html: `
         <h2>New Contact Form Submission</h2>
         <p><strong>Name:</strong> ${name}</p>

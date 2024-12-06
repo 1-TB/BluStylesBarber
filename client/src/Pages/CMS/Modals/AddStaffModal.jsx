@@ -34,7 +34,7 @@ const AddStaffModal = ({ isOpen, onClose, initialData = null, onSuccessfulSubmit
         handleClose();
       }
     };
-
+    
     if (initialData) {
       setFormData({
         ...initialData,
