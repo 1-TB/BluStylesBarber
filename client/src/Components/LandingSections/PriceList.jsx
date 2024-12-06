@@ -40,8 +40,7 @@ const PriceList = ( { priceRef } ) => {
             </h2>
             <ZapIcon className="w-10 h-10 text-white pb-2" />
             <p className="text-[#001528] font-semibold text-lg" style={{fontFamily: "Abel"}}>
-              Dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi ut.
+            At BluStyles, we believe in transparent pricing and exceptional value. Our services are designed to give you exactly what you need, from a quick trim to a complete grooming experience.
             </p>
           </div>
 

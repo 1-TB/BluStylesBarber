@@ -31,8 +31,8 @@ export default function IntroductionSection({ cutsRef }) {
 
           <p className='text-gray-400 text-base sm:text-lg lg:text-xl text-center md:text-left'
              style={{ fontFamily: "Abel", letterSpacing: "0.02em" }}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt laudantium nisi laborum molestias aperiam consequatur blanditiis in dolore esse. Numquam unde, ratione obcaecati magni reiciendis enim assumenda eaque molestiae debitis.
-            Obcaecati optio accusantium, animi inventore aperiam non nihil vel hic nesciunt? Saepe voluptas, sunt nemo ipsa iusto odit, accusantium vitae laborum tenetur qui soluta recusandae totam neque, itaque dolore beatae.
+            Welcome to BluStyles Barbershop, where every visit is more than just a haircut – it's about building lasting connections. Since opening our doors in Springfield, we've made it our mission to create a space where you can relax, engage in genuine conversation, and leave looking and feeling your best.
+            Our approach is simple: we believe that understanding you, your lifestyle, and your preferences helps us deliver not just the perfect cut, but an experience that keeps you coming back. Whether you're sharing stories about your weekend plans, discussing local events, or seeking advice on hair care, we're here to listen and connect.
           </p>
          
           <button 
