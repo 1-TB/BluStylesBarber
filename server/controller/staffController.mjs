@@ -56,11 +56,20 @@ export const getAllStaff = async (req, res) => {
   }
 }
 
+
 export const deleteStaffbyId = async (req, res) => {
-  try {
+  try { 
     const { id } = req.params;
-    const deleteStaff = await User.deleteOne({_id: id});
     
+    //Check if trying to delete own account
+    if(req.user.userId.toString() === id){
+      return res.status(403).json({ 
+        message: "Staff members cannot delete their own accounts" 
+    });
+    }  
+    
+    const deleteStaff = await User.deleteOne({_id: id});
+     
     if (!deleteStaff) {
      res.status(404).json({ message: 'Unable to find Staff.'})
      return;
@@ -81,7 +90,6 @@ export const deleteStaffbyId = async (req, res) => {
 export const editStaffById = async (req, res) => {
   try {
   const {id} = req.params;
-  console.log(id)
   const staffUpdates = req.body;
 
   const salt = await bcrypt.genSalt(10);

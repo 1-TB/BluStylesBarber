@@ -4,44 +4,30 @@ import StaffCard from "./Components/StaffCard";
 import AddStaffModal from "./Modals/AddStaffModal";
 import { useAuth } from "./AuthContext";
 import { useStaff } from "./StaffProvider";
+import ErrorModal from "./Modals/ErrorModal"
 
 const StaffManagement = () => {
-   const [openStaffModel, setOpenStaffModel] = useState(false);
+   const [openStaffModal, setOpenStaffModal] = useState(false);
+   const [openErrorModal, setOpenErrorModal] = useState(false);
    const [editStaffData, setEditStaffData] = useState(null);
-   const [staffs, setStaffs] = useStaff();
+   const [error,setError] = useState('')
+   const [staffs,setStaff,fetchStaffData] = useStaff();
    const { user } = useAuth();
 
-   // Fetch current Staff from database
-   const fetchStaffData = useCallback(async () => {
-     try {
-       const response = await fetch("/api/staff/all", {
-         method: "GET",
-         headers: {
-           "Content-Type": "application/json",
-           "Authorization": `Bearer ${user.token}`,
-         },
-       });
-        
-       const request = await response.json();
-       setStaffs(request);
-     } catch (error) {
-       console.error("Error fetching staff", error);
-     }
-   }, [user.token, setStaffs]);
-
+   // Fetch current Staff from database;
    useEffect(() => {
      fetchStaffData();
-   }, []);
+   }, [fetchStaffData]);
 
    // Edit Staff function
    const handleEditStaff = (staff) => {
      setEditStaffData(staff);
-     setOpenStaffModel(true);
+     setOpenStaffModal(true);
    };
 
    const handleAddStaff = () => {
     setEditStaffData(null)
-    setOpenStaffModel(true)
+    setOpenStaffModal(true)
    }
 
    // Delete Staff Function
@@ -55,7 +41,11 @@ const StaffManagement = () => {
          },
        });
         
+       const data = await response.json();
+
        if (!response.ok) {
+        setError(data.message)
+        setOpenErrorModal(true);
          throw new Error(`HTTP error! Status: ${response.status}`);
        }
 
@@ -65,7 +55,7 @@ const StaffManagement = () => {
        console.error("Unable to delete Staff,", error);
      }
    };
-
+    
    return (
      <>
        <div className="min-h-screen bg-gray-50">
@@ -97,11 +87,20 @@ const StaffManagement = () => {
            />
 
            <AddStaffModal
-             isOpen={openStaffModel}
-             onClose={() => setOpenStaffModel(false)}
+             isOpen={openStaffModal}
+             onClose={() => setOpenStaffModal(false)}
              initialData={editStaffData}
              onSuccessfulSubmit={fetchStaffData}
            />
+
+           {error && 
+           <ErrorModal 
+           isOpen={openErrorModal}
+           onClose={() => setOpenErrorModal}
+           errorMessage={error}
+           setErrorMessage={setError}
+           />
+           }
          </main>
        </div>
      </>
