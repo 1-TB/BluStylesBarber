@@ -7,6 +7,8 @@ import FeaturedCuts from "../Components/LandingSections/FeaturedCuts";
 import { Link } from 'react-router-dom';
 import ServiceSection from '../Components/LandingSections/ServiceSection';
 import ReviewSection from '../Components/LandingSections/ReviewSection';
+import BookingDialog from '../Components/MSC/BookingDialog';
+
 
 const LandingPage = () => {
   const pricingRef = useRef(null);
@@ -54,17 +56,7 @@ const LandingPage = () => {
                   LEAVE BETTER THAN<br />
                   YOU CAME!"
                 </p>
-                <Link 
-                  to="/booking"
-                  className="inline-block"
-                >
-                  <button 
-                    className="bg-transparent text-white border border-white/40 px-8 sm:px-12 md:px-16 py-3 md:py-4 uppercase text-base sm:text-lg hover:bg-white/10 transition-all duration-300 backdrop-blur-sm"
-                    style={{ fontFamily: "Teko", letterSpacing: "0.1em" }}
-                  >
-                    REQUEST A BOOKING TODAY
-                  </button>
-                </Link>
+                <BookingDialog />
               </div>
             </div>
           </div>
